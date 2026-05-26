@@ -1,28 +1,24 @@
 import './App.css'
-import { Header } from './components/Header'
+import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
-import { Features } from './components/Features'
-import { HowItWorks } from './components/HowItWorks'
-import { ValuePreview } from './components/ValuePreview'
-import { OpenSource } from './components/OpenSource'
-import { Contact } from './components/Contact'
+import { Problem } from './components/Problem'
+import { Artifacts } from './components/Artifacts'
+import { Install } from './components/Install'
+import { Example } from './components/Example'
 import { Footer } from './components/Footer'
 
-function App() {
+export default function App() {
   return (
-    <div className="app">
-      <Header />
+    <div className="page">
+      <Nav />
       <main>
         <Hero />
-        <Features />
-        <HowItWorks />
-        <ValuePreview />
-        <OpenSource />
-        <Contact />
+        <Problem />
+        <Artifacts />
+        <Install />
+        <Example />
       </main>
       <Footer />
     </div>
   )
 }
-
-export default App

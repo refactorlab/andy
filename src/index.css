@@ -1,37 +1,73 @@
-:root {
-  /* GitHub dark dimmed palette — mirrors pr36 example */
-  --bg-canvas: #0d1117;
-  --bg-default: #161b22;
-  --bg-subtle: #21262d;
-  --bg-overlay: #1c2128;
-  --bg-emphasis: #30363d;
-  --border-default: #30363d;
-  --border-muted: #21262d;
-  --border-emphasis: #6e7681;
-  --fg-default: #e6edf3;
-  --fg-muted: #7d8590;
-  --fg-subtle: #6e7681;
-  --fg-on-emphasis: #ffffff;
-  --accent-fg: #2f81f7;
-  --accent-emphasis: #1f6feb;
-  --accent-subtle: rgba(56, 139, 253, 0.15);
-  --success-fg: #3fb950;
-  --success-emphasis: #238636;
-  --success-subtle: rgba(46, 160, 67, 0.15);
-  --attention-fg: #d29922;
-  --attention-emphasis: #9e6a03;
-  --attention-subtle: rgba(187, 128, 9, 0.15);
-  --danger-fg: #f85149;
-  --danger-emphasis: #da3633;
-  --danger-subtle: rgba(248, 81, 73, 0.15);
-  --done-fg: #a371f7;
-  --done-emphasis: #8957e5;
-  --done-subtle: rgba(163, 113, 247, 0.15);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
-    Helvetica, Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
-    Consolas, monospace;
+:root {
+  /* ───────────────────── Light theme (default) ─────────────────────
+   * Mirrors the Refactor Labs desktop UI palette
+   * (drift-lab/desktop-ui/src/styles/globals.css). */
+  --bg: #fafaf7;
+  --bg-card: #ffffff;
+  --bg-soft: #f4f4ef;
+  --bg-elevated: rgba(255, 255, 255, 0.85);
+  --border: #e8e6df;
+  --border-strong: #d4d2cb;
+  --text: #1a1a1a;
+  --text-dim: #6b6b6b;
+  --text-faint: #9e9e9e;
+  --accent: #ff6b3d;
+  --accent-2: #ffb547;
+  --accent-soft: #fff1ea;
+  --success: #00a86b;
+  --success-soft: #e6f7ef;
+  --danger: #c4341f;
+  --danger-soft: #fdecea;
+  --info: #1d4ed8;
+  --info-soft: #e6f0ff;
+
+  --gradient: linear-gradient(135deg, #ff6b3d 0%, #ff9558 50%, #ffb547 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(255, 107, 61, 0.08) 0%, rgba(255, 181, 71, 0.05) 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 32px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 100px;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Consolas, monospace;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0f0e0c;
+  --bg-card: #1a1816;
+  --bg-soft: #221f1c;
+  --bg-elevated: rgba(34, 31, 28, 0.85);
+  --border: #2a2724;
+  --border-strong: #3a3631;
+  --text: #f5f3ee;
+  --text-dim: #a8a39a;
+  --text-faint: #6e6a62;
+  --accent: #ff7a4f;
+  --accent-2: #ffc070;
+  --accent-soft: rgba(255, 122, 79, 0.12);
+  --success: #4ec88a;
+  --success-soft: rgba(78, 200, 138, 0.12);
+  --danger: #e8624f;
+  --danger-soft: rgba(232, 98, 79, 0.12);
+  --info: #6b9dff;
+  --info-soft: rgba(107, 157, 255, 0.12);
+
+  --gradient: linear-gradient(135deg, #ff7a4f 0%, #ff9558 50%, #ffc070 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(255, 122, 79, 0.12) 0%, rgba(255, 192, 112, 0.08) 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5), 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.5);
 
   color-scheme: dark;
 }
@@ -44,20 +80,38 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg-canvas);
-  color: var(--fg-default);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
+body {
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 181, 71, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 82% 78%, rgba(255, 107, 61, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 230, 200, 0.10) 0%, transparent 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+[data-theme='dark'] body {
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 122, 79, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(255, 181, 71, 0.06) 0%, transparent 50%);
+}
+
 a {
-  color: var(--accent-fg);
+  color: var(--accent);
   text-decoration: none;
+  transition: opacity 0.15s ease;
 }
 a:hover {
+  opacity: 0.8;
   text-decoration: underline;
 }
 
@@ -72,6 +126,6 @@ svg {
 }
 
 ::selection {
-  background: rgba(47, 129, 247, 0.4);
-  color: var(--fg-default);
+  background: rgba(255, 107, 61, 0.25);
+  color: var(--text);
 }

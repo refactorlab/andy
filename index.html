@@ -1,17 +1,27 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Andy — PR Handoff Assistant by Drift. A GitHub Action that turns every pull request into a guided handoff: architecture diagrams, business value, code suggestions, risk maps." />
-    <meta property="og:title" content="Andy — PR Handoff Assistant by Drift" />
-    <meta property="og:description" content="The companion that reviews your pull request like the engineer who wrote it would explain it." />
+    <meta name="description" content="Andy — PR Handoff Assistant by Refactor Labs. A GitHub Action that turns every pull request into a guided handoff: architecture, money/time impact, focused suggestions, risk map." />
+    <meta property="og:title" content="Andy — PR Handoff Assistant by Refactor Labs" />
+    <meta property="og:description" content="The companion that explains your PR like the engineer who wrote it would." />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Andy — PR Handoff Assistant by Drift</title>
+    <title>Andy — PR Handoff Assistant by Refactor Labs</title>
+    <script>
+      // Theme bootstrap — runs before paint, no FOUC on reload.
+      (function () {
+        try {
+          var stored = localStorage.getItem('andy-theme');
+          document.documentElement.dataset.theme = stored === 'dark' ? 'dark' : 'light';
+        } catch (_) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
