@@ -20,7 +20,9 @@ app deployed to GitHub Pages on every push to `main`.
 ```
 public/pr36-github-ui_2.html   # the full example review the landing page links to
 src/                            # React landing-page components
+.github/workflows/ci.yml        # type-check + build on every PR
 .github/workflows/deploy.yml    # GitHub Pages deploy pipeline
+.github/workflows/drift.yml     # Andy PR review (runs on this repo's own PRs)
 ```
 
 ## Local development
@@ -35,6 +37,15 @@ bun run preview    # preview the production build
 ```
 
 The dev server serves the example PR review at `/pr36-github-ui_2.html`.
+
+## Continuous integration
+
+Two workflows run on every pull request:
+
+- **`ci.yml`** type-checks (`tsc -b --noEmit`) and builds the landing page, so
+  a broken build never reaches `main`.
+- **`drift.yml`** runs Andy on this repo's own PRs — it dogfoods the action,
+  posting the architecture map, value card, suggestions, and risk quadrant.
 
 ## Deployment
 
