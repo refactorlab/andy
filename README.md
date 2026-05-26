@@ -1,10 +1,10 @@
-# Andy — PR Handoff Assistant by Drift
+# Andy — PR Handoff Assistant by Refactor Labs
 
-> Every PR, handed off like the author wrote it.
+> The PR review that explains what actually changed.
 
 Andy is a GitHub Action that turns every pull request into a guided handoff:
-architecture diagrams, business-value scoring, focused code suggestions, and a
-risk map — all posted as a single bot comment on the PR.
+an architecture map, a money/time impact card, focused code suggestions, and a
+risk quadrant — all posted as a single bot comment on the PR.
 
 - **Marketplace:** <https://github.com/marketplace/actions/andy-pr-handoff-by-drift>
 - **Landing page:** <https://refactorlab.github.io/andy/>
