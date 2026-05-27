@@ -1,3 +1,6 @@
+import { TiltCard } from './TiltCard'
+import { ScrambleText } from './ScrambleText'
+
 const items = [
   {
     icon: '🏗',
@@ -41,8 +44,8 @@ export function Artifacts() {
   return (
     <section className="section" id="what">
       <div className="wrap">
-        <header className="section-head">
-          <span className="kicker">// what andy ships in every review</span>
+        <header className="section-head" data-reveal>
+          <ScrambleText className="kicker" text="// what andy ships in every review" />
           <h2>Six artifacts. <span className="hl">One PR comment.</span></h2>
           <p className="section-lede">
             One sticky comment per pull request, re-rendered on every push.
@@ -53,8 +56,8 @@ export function Artifacts() {
         </header>
 
         <div className="artifact-grid">
-          {items.map((it) => (
-            <article className="artifact" key={it.title}>
+          {items.map((it, i) => (
+            <TiltCard className="artifact" key={it.title} revealDelay={(i % 3) * 0.08} maxTilt={5}>
               <div className="artifact-icon" aria-hidden="true">{it.icon}</div>
               <h3>{it.title}</h3>
               <p>{it.body}</p>
@@ -63,7 +66,7 @@ export function Artifacts() {
                   <span className="tagchip" key={t}>{t}</span>
                 ))}
               </div>
-            </article>
+            </TiltCard>
           ))}
         </div>
       </div>

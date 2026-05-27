@@ -20,6 +20,95 @@ main {
   flex: 1;
 }
 
+/* ─── Ambient backdrop: drifting aurora + film grain ──────────────────────
+ * Two fixed, non-interactive layers behind all content. The aurora supplies
+ * the page's colour (replacing the old static body gradients); the grain adds
+ * a faint analog texture. Drift pauses automatically under reduced motion. */
+/* WebGL shader backdrop (when available) — sits below the grain, above nothing.
+ * Pre-painted with --bg so there's no flash before the first frame. */
+.shader-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+  background: var(--bg);
+}
+/* When the shader initialises it sets .has-shader on <html>; hide the CSS
+ * aurora so the two backdrops never stack. */
+.has-shader .aurora {
+  display: none;
+}
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+}
+.aurora-blob-1 {
+  width: 52vw;
+  height: 52vw;
+  top: -14%;
+  left: -8%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%);
+  opacity: 0.4;
+  animation: aurora-drift-1 22s var(--ease-in-out) infinite;
+}
+.aurora-blob-2 {
+  width: 46vw;
+  height: 46vw;
+  right: -10%;
+  bottom: -16%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 55%, transparent), transparent 70%);
+  opacity: 0.35;
+  animation: aurora-drift-2 27s var(--ease-in-out) infinite;
+}
+.aurora-blob-3 {
+  width: 42vw;
+  height: 42vw;
+  top: 34%;
+  left: 42%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--info) 35%, transparent), transparent 70%);
+  opacity: 0.22;
+  animation: aurora-drift-3 31s var(--ease-in-out) infinite;
+}
+[data-theme='dark'] .aurora-blob-1 { opacity: 0.26; }
+[data-theme='dark'] .aurora-blob-2 { opacity: 0.22; }
+[data-theme='dark'] .aurora-blob-3 { opacity: 0.16; }
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 170px 170px;
+}
+[data-theme='dark'] .grain { opacity: 0.06; }
+
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8%, 7%) scale(1.16); }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-7%, -9%) scale(1.12); }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6%, 8%) scale(1.22); }
+}
+
 /* ─── Nav ──────────────────────────────────────────────────────────────── */
 
 .nav {
@@ -30,6 +119,30 @@ main {
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   background: color-mix(in srgb, var(--bg) 75%, transparent);
   border-bottom: 1px solid var(--border);
+  transition: background 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+/* Elevates once the page scrolls, so the bar reads as floating over content. */
+.nav-scrolled {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  box-shadow: 0 1px 0 var(--border), 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+[data-theme='dark'] .nav-scrolled {
+  box-shadow: 0 1px 0 var(--border), 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Reading-progress bar pinned to the bottom edge of the sticky nav. */
+.nav-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  background: var(--gradient);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 50%, transparent);
+  will-change: transform;
 }
 
 .nav-inner {
@@ -80,8 +193,31 @@ main {
   color: var(--text-dim);
   font-size: 14px;
   font-weight: 500;
+  position: relative;
+  font-variation-settings: 'wght' 500;
+  transition: color 0.2s ease, font-variation-settings 0.3s var(--ease-out);
+}
+.nav-links a:hover,
+.nav-links a.active {
+  font-variation-settings: 'wght' 680;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gradient);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease-out);
 }
 .nav-links a:hover { color: var(--text); opacity: 1; text-decoration: none; }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after { transform: scaleX(1); }
 
 .nav-actions {
   display: flex;
@@ -178,7 +314,8 @@ main {
 }
 
 .hl {
-  background: var(--gradient);
+  background: linear-gradient(110deg, var(--accent) 0%, var(--accent-2) 42%, var(--accent) 84%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -196,30 +333,54 @@ main {
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out),
+    background 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
 }
 .btn:hover { text-decoration: none; opacity: 1; }
+.btn:active { transition-duration: 0.06s; }
 .btn-sm { padding: 8px 13px; font-size: 13px; }
 
 .btn-primary {
   background: var(--gradient);
   color: #fff;
   box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  /* Composed transform: magnetic pull + hover lift + press, all via vars so
+   * they never clobber one another. */
+  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px)) translateY(var(--lift, 0px))
+    scale(var(--press, 1));
+}
+.btn-primary:hover { --lift: -2px; }
+.btn-primary:active { --press: 0.97; }
+/* Light sheen that sweeps across on hover. */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.35) 50%, transparent 75%);
+  transform: translateX(-130%);
+  transition: transform 0.7s var(--ease-out);
+  pointer-events: none;
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 36%, transparent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 40%, transparent);
+  filter: saturate(1.08);
 }
+.btn-primary:hover::after { transform: translateX(130%); }
 
 .btn-ghost {
   background: var(--bg-card);
   color: var(--text);
   border-color: var(--border);
+  transform: translateY(var(--lift, 0px)) scale(var(--press, 1));
 }
 .btn-ghost:hover {
+  --lift: -2px;
   border-color: var(--border-strong);
   background: var(--bg-soft);
 }
+.btn-ghost:active { --press: 0.97; }
 
 .link-inline {
   font-size: 13px;
@@ -235,17 +396,19 @@ main {
   position: relative;
   overflow: hidden;
 }
-.hero::before {
-  content: '';
+.hero-canvas {
   position: absolute;
-  inset: -20% 30% auto auto;
-  width: 60%;
-  height: 80%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
-  filter: blur(40px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 0;
   pointer-events: none;
+  /* Fade the field out toward the edges so it reads as texture, not a panel. */
+  -webkit-mask-image: radial-gradient(135% 115% at 35% 30%, #000 45%, transparent 85%);
+  mask-image: radial-gradient(135% 115% at 35% 30%, #000 45%, transparent 85%);
 }
+/* (Removed the standalone hero glow blob — the shader/aurora backdrop already
+ * supplies the colour; stacking a third source over the hero muddied it.) */
 
 .hero-grid {
   position: relative;
@@ -399,26 +562,252 @@ main {
   gap: 16px;
   flex-wrap: wrap;
 }
-.hcard-score-num {
-  font-family: var(--font-mono);
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-.hcard-score-den {
-  font-size: 16px;
-  color: var(--text-faint);
-  font-weight: 500;
-  margin-left: 2px;
-}
 .hcard-score-label {
   font-size: 11.5px;
   font-family: var(--font-mono);
   color: var(--text-dim);
   margin-top: 4px;
+  line-height: 1.4;
 }
+
+/* Radial PR-health gauge */
+.hcard-gauge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hcard-gauge .hcard-score-label {
+  margin-top: 0;
+}
+.gauge {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.gauge svg {
+  display: block;
+}
+.gauge-track {
+  stroke: var(--border);
+}
+.gauge-stop-1 { stop-color: var(--accent); }
+.gauge-stop-2 { stop-color: var(--accent-2); }
+.gauge-bar {
+  transition: stroke-dashoffset 1.3s var(--ease-out);
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+.gauge-num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
 .hcard-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* "Live analysis" sequence: a scan band sweeps the card, then findings pop in
+ * — reads as Andy reviewing the PR in real time. Plays once on reveal. */
+.hcard-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 15%, transparent) 46%,
+    color-mix(in srgb, var(--accent) 24%, transparent) 50%,
+    color-mix(in srgb, var(--accent) 15%, transparent) 54%,
+    transparent 100%
+  );
+  background-size: 100% 42%;
+  background-repeat: no-repeat;
+  background-position: 0 -42%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tilt-scene.is-visible .hcard-scan {
+    animation: scan-sweep 1.15s var(--ease-out) 0.25s 1 both;
+  }
+  .hcard-pills .pill {
+    opacity: 0;
+  }
+  .tilt-scene.is-visible .hcard-pills .pill {
+    animation: pop-in 0.5s var(--ease-spring) both;
+  }
+  .tilt-scene.is-visible .hcard-pills .pill:nth-child(1) { animation-delay: 0.58s; }
+  .tilt-scene.is-visible .hcard-pills .pill:nth-child(2) { animation-delay: 0.7s; }
+  .tilt-scene.is-visible .hcard-pills .pill:nth-child(3) { animation-delay: 0.82s; }
+}
+@keyframes scan-sweep {
+  0% { opacity: 0; background-position: 0 -42%; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { opacity: 0; background-position: 0 142%; }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.6) translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── Section navigator rail ───────────────────────────────────────────────
+ * Fixed dots on the right edge; active one stretches into a pill and its label
+ * slides in on hover/active. Hidden where there isn't room. */
+.section-rail {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-end;
+}
+.rail-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  background: var(--border-strong);
+  transition: width 0.35s var(--ease-spring), height 0.3s var(--ease-out),
+    background 0.3s var(--ease-out);
+}
+.rail-dot:hover {
+  background: var(--text-dim);
+  opacity: 1;
+}
+.rail-dot.is-active {
+  height: 26px;
+  background: var(--gradient);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.rail-label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 100px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.rail-dot:hover .rail-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+@media (max-width: 1180px) {
+  .section-rail { display: none; }
+}
+
+/* ── Scroll-velocity marquee ──────────────────────────────────────────────
+ * A ticker of what's inside a review; drifts always, leans into scroll speed.
+ * Transform is driven by JS (see Marquee.tsx). */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-soft) 45%, transparent);
+  padding: 15px 0;
+}
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-dim);
+}
+.marquee-sep {
+  color: var(--accent);
+  font-size: 8px;
+  margin: 0 26px;
+  transform: translateY(-1px);
+}
+
+/* ── Self-drawing architecture diagram ────────────────────────────────────
+ * Connector paths stroke on (pathLength normalised to 1) and nodes pop in,
+ * staggered via --d, once `.is-drawn` is set. */
+.arch-wrap {
+  margin: 28px 0 4px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-card) 70%, transparent);
+  padding: 18px 20px 8px;
+}
+.arch-cap {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.arch-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.arch-box {
+  fill: var(--bg-soft);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+.arch-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--text);
+  dominant-baseline: middle;
+}
+.arch-andy-text {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  fill: #fff;
+  dominant-baseline: middle;
+}
+.arch-edge {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s var(--ease-out);
+  transition-delay: var(--d, 0s);
+}
+.arch-node {
+  opacity: 0;
+  transform: scale(0.92);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-spring);
+  transition-delay: var(--d, 0s);
+}
+.arch-wrap.is-drawn .arch-edge {
+  stroke-dashoffset: 0;
+}
+.arch-wrap.is-drawn .arch-node {
+  opacity: 1;
+  transform: none;
+}
 .pill {
   font-size: 11px;
   font-family: var(--font-mono);
@@ -450,6 +839,7 @@ main {
 .axis-fill {
   height: 100%;
   border-radius: 100px;
+  width: var(--w, 0%);
 }
 .axis-good { background: var(--gradient); }
 .axis-info { background: linear-gradient(90deg, var(--info), color-mix(in srgb, var(--info) 50%, var(--accent))); }
@@ -488,6 +878,13 @@ main {
   background: var(--bg-card);
   padding: 24px 22px;
   position: relative;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+.problem-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 .problem-card h3 {
   font-size: 19px;
@@ -523,12 +920,11 @@ main {
   border-radius: 14px;
   background: var(--bg-card);
   padding: 22px 20px;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 .artifact:hover {
-  border-color: var(--border-strong);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  --pop: -6px;
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--accent) 12%, rgba(0, 0, 0, 0.06));
 }
 .artifact-icon {
   width: 36px;
@@ -540,6 +936,10 @@ main {
   justify-content: center;
   font-size: 18px;
   margin-bottom: 12px;
+  transition: transform 0.35s var(--ease-spring);
+}
+.artifact:hover .artifact-icon {
+  transform: scale(1.12) rotate(-6deg);
 }
 .artifact h3 {
   margin: 0 0 6px;
@@ -685,6 +1085,13 @@ main {
   background: var(--bg-card);
   padding: 18px 18px;
   box-shadow: var(--shadow-sm);
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+.example-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 .example-head {
   display: flex;
@@ -831,4 +1238,316 @@ main {
   font-size: 12.5px;
   color: var(--text-faint);
   font-family: var(--font-mono);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Motion & micro-interactions
+ *
+ * Every animated default lives here, gated behind `prefers-reduced-motion:
+ * no-preference`. The reduced-motion fallback (index.css) neutralizes
+ * durations globally, so static defaults elsewhere stay fully visible.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Custom trailing cursor ───────────────────────────────────────────────
+ * Additive accent ring; OS cursor stays. Only shown once JS confirms a fine
+ * pointer + motion allowed (it adds `.is-visible` on first move). */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out),
+    background 0.25s var(--ease-out), border-color 0.25s var(--ease-out),
+    opacity 0.3s ease;
+  will-change: transform;
+}
+.cursor-ring.is-visible {
+  opacity: 1;
+}
+.cursor-ring.is-pointer {
+  width: 52px;
+  height: 52px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 90%, transparent);
+}
+.cursor-ring.is-down {
+  width: 22px;
+  height: 22px;
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+/* ── Pointer-reactive cards: 3D tilt + cursor spotlight ─────────────────────
+ * Two layers: `.tilt-scene` (entrance + perspective) wraps `.tilt-card`
+ * (cursor tilt + glow). Inert without JS — vars default to a flat, glow-off
+ * resting state, so touch / reduced-motion render a normal static card. */
+.tilt-scene {
+  display: flex;
+  perspective: 1100px;
+}
+.tilt-card {
+  position: relative;
+  flex: 1;
+  isolation: isolate;
+  transform: translateY(var(--pop, 0px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.32s var(--ease-out), box-shadow 0.32s var(--ease-out),
+    border-color 0.32s var(--ease-out);
+  will-change: transform;
+}
+.tilt-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 62%
+  );
+  opacity: var(--active, 0);
+  transition: opacity 0.35s var(--ease-out);
+  pointer-events: none;
+}
+.hero-card:hover {
+  --pop: -5px;
+}
+/* Slowly rotating conic-gradient ring (registered --bd-angle drives it).
+ * Border-only via the mask-composite trick; sits above the card, edges only. */
+.hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--bd-angle, 0deg),
+    transparent 52%,
+    color-mix(in srgb, var(--accent) 75%, transparent),
+    color-mix(in srgb, var(--accent-2) 85%, transparent),
+    transparent 96%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.75;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-card::after {
+    animation: bd-spin 7s linear infinite;
+  }
+}
+@keyframes bd-spin {
+  to {
+    --bd-angle: 360deg;
+  }
+}
+
+/* Brand logo nudges to life on hover. */
+.nav-logo,
+.footer-logo {
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.3s var(--ease-out);
+}
+.nav-brand:hover .nav-logo {
+  transform: rotate(-6deg) scale(1.08);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.footer-brand:hover .footer-logo {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Scroll-reveal: single element ──────────────────────────────────── */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0s);
+    will-change: opacity, transform;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Scroll-reveal: stagger direct children ─────────────────────────── */
+  [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  [data-reveal-stagger].is-visible > * {
+    animation: reveal-up 0.65s var(--ease-out) both;
+  }
+  [data-reveal-stagger].is-visible > *:nth-child(1) { animation-delay: 0.04s; }
+  [data-reveal-stagger].is-visible > *:nth-child(2) { animation-delay: 0.12s; }
+  [data-reveal-stagger].is-visible > *:nth-child(3) { animation-delay: 0.20s; }
+  [data-reveal-stagger].is-visible > *:nth-child(4) { animation-delay: 0.28s; }
+  [data-reveal-stagger].is-visible > *:nth-child(5) { animation-delay: 0.36s; }
+  [data-reveal-stagger].is-visible > *:nth-child(6) { animation-delay: 0.44s; }
+
+  /* ── Data bars fill once their card is revealed ─────────────────────── */
+  .axis-fill {
+    width: 0;
+  }
+  .is-visible .axis-fill {
+    animation: bar-fill 1.15s var(--ease-out) 0.15s both;
+  }
+
+  /* ── Ambient loops ──────────────────────────────────────────────────── */
+  .hl {
+    animation: hl-shine 7s linear infinite;
+  }
+  .tag-dot {
+    animation: dot-pulse 2.2s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes reveal-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Kinetic headline ─────────────────────────────────────────────────────
+ * Per-word clip-masked slide-up + 3D rotate + blur. Opts out of the parent
+ * stagger-reveal (it choreographs itself, word by word). */
+.kinetic-heading {
+  perspective: 900px;
+}
+[data-reveal-stagger] > .kinetic-heading {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+.kw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Keep descenders (g, y, p) from clipping against the mask. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.kw-inner {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kw-inner {
+    opacity: 0;
+    transform: translateY(108%) rotateX(-45deg);
+    filter: blur(6px);
+    font-variation-settings: 'wght' 300;
+    transform-origin: bottom center;
+    animation: kw-in 0.85s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 65ms + 0.1s);
+  }
+}
+@keyframes kw-in {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+    font-variation-settings: 'wght' 800;
+  }
+}
+
+@keyframes bar-fill {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--w, 0%);
+  }
+}
+
+@keyframes hl-shine {
+  to {
+    background-position: 220% center;
+  }
+}
+
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--success) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 0%, transparent);
+  }
+}
+
+/* ── Native scroll-driven animations (progressive enhancement) ──────────────
+ * Runs entirely off the scroll position on the compositor — no JS, no scroll
+ * listeners. Only browsers that support the timeline API opt in; everyone else
+ * keeps the static layout. Disabled under reduced motion. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-grid {
+      animation: hero-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 95%;
+    }
+    .hero-canvas {
+      animation: hero-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes hero-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-56px) scale(0.97);
+  }
+}
+@keyframes hero-parallax {
+  from {
+    transform: translateY(-7%);
+  }
+  to {
+    transform: translateY(12%);
+  }
+}
+
+/* ── Self-typing code block ───────────────────────────────────────────────
+ * `.tw-rest` holds the untyped remainder transparently so the block keeps its
+ * final height from the first frame — no layout shift as lines appear. */
+.typewriter {
+  font-family: inherit;
+}
+.tw-rest {
+  color: transparent;
+}
+.tw-caret {
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  margin-left: 1px;
+  transform: translateY(2px);
+  background: var(--accent);
+  border-radius: 1px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tw-caret {
+    animation: tw-blink 1.05s steps(1) infinite;
+  }
+}
+.tw-caret-done {
+  opacity: 0.55;
+}
+@keyframes tw-blink {
+  50% {
+    opacity: 0;
+  }
 }

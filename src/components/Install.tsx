@@ -1,3 +1,6 @@
+import { Typewriter } from './Typewriter'
+import { ScrambleText } from './ScrambleText'
+
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
 const yaml = `name: Drift
@@ -9,6 +12,7 @@ permissions:
   contents: read
   pull-requests: write
   checks: write
+  models: read
 
 jobs:
   drift:
@@ -40,8 +44,8 @@ export function Install() {
   return (
     <section className="section section-alt" id="install">
       <div className="wrap">
-        <header className="section-head">
-          <span className="kicker">// install in 30 seconds</span>
+        <header className="section-head" data-reveal>
+          <ScrambleText className="kicker" text="// install in 30 seconds" />
           <h2>One YAML file. Then push.</h2>
           <p className="section-lede">
             Andy runs as a GitHub Action on your own runner. Nothing leaves the
@@ -50,7 +54,7 @@ export function Install() {
         </header>
 
         <div className="install-grid">
-          <div className="code-card" aria-label=".github/workflows/drift.yml">
+          <div className="code-card" aria-label=".github/workflows/drift.yml" data-reveal>
             <div className="code-head">
               <div className="code-dots" aria-hidden="true">
                 <span /><span /><span />
@@ -58,9 +62,9 @@ export function Install() {
               <span className="code-path">.github/workflows/drift.yml</span>
               <span className="code-lang">YAML</span>
             </div>
-            <pre className="code-block"><code>{yaml}</code></pre>
+            <pre className="code-block"><Typewriter text={yaml} /></pre>
             <div className="code-foot">
-              <a className="btn btn-primary btn-sm" href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-primary btn-sm" data-magnetic href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
                 Install from Marketplace →
               </a>
               <a className="link-inline" href="https://github.com/refactorlab/andy" target="_blank" rel="noopener noreferrer">
@@ -69,7 +73,7 @@ export function Install() {
             </div>
           </div>
 
-          <ol className="steps">
+          <ol className="steps" data-reveal-stagger>
             {steps.map((s) => (
               <li key={s.n} className="step">
                 <span className="step-num">{s.n}</span>
