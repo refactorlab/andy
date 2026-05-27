@@ -1,0 +1,13 @@
+{
+  "name": "Andy — PR Handoff Assistant",
+  "short_name": "Andy",
+  "description": "The PR review that explains what actually changed — architecture, impact, ranked suggestions, and a risk map.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fafaf7",
+  "theme_color": "#fafaf7",
+  "icons": [
+    { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

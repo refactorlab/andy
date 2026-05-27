@@ -17,6 +17,8 @@ export function HeroCanvas() {
   useEffect(() => {
     const canvasEl = canvasRef.current
     if (!canvasEl) return
+    // Low-power devices skip the interactive dot-field entirely.
+    if (document.documentElement.classList.contains('perf-lite')) return
     const context = canvasEl.getContext('2d')
     if (!context) return
     // Non-null aliases so the render closures keep their narrowed types.
@@ -120,6 +122,11 @@ export function HeroCanvas() {
       if (document.hidden) stop()
       else start()
     }
+    // Runtime governor asked us to back off → stop for good (CSS hides us).
+    const onPerfLite = () => {
+      io.disconnect()
+      stop()
+    }
     const themeObserver = new MutationObserver(() => {
       accent = readAccent()
     })
@@ -129,6 +136,7 @@ export function HeroCanvas() {
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     document.addEventListener('pointerleave', onPointerLeave)
     document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('andy-perf-lite', onPerfLite)
     io.observe(canvas)
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
@@ -138,6 +146,7 @@ export function HeroCanvas() {
       window.removeEventListener('pointermove', onPointerMove)
       document.removeEventListener('pointerleave', onPointerLeave)
       document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('andy-perf-lite', onPerfLite)
       io.disconnect()
       themeObserver.disconnect()
     }

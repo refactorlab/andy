@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 import { useScroll } from '../lib/useScroll'
 import { useScrollSpy } from '../lib/useScrollSpy'
+import { isMac } from '../lib/platform'
 
 const NAV_LINKS = [
   { id: 'problem', label: 'Problem' },
@@ -39,6 +40,19 @@ export function Nav() {
         </div>
 
         <div className="nav-actions">
+          <button
+            type="button"
+            className="nav-cmdk"
+            onClick={() => window.dispatchEvent(new Event('open-command-palette'))}
+            aria-label="Open command palette"
+            title="Command palette"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <kbd>{isMac ? '⌘' : 'Ctrl'} K</kbd>
+          </button>
           <ThemeToggle />
           <a
             className="nav-github"

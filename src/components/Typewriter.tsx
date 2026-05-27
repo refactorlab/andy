@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { tokenizeYaml } from '../lib/yaml'
 
 interface TypewriterProps {
   text: string
@@ -7,11 +8,11 @@ interface TypewriterProps {
 }
 
 /**
- * Types `text` out character-by-character the first time it scrolls into view,
- * with a blinking caret. The not-yet-typed remainder is rendered transparent
- * so the full block reserves its final size up front — zero layout shift.
- * Reduced motion → full text immediately. The complete text is exposed to
- * assistive tech via aria-label; the animated pieces are aria-hidden.
+ * Types `text` out character-by-character on first scroll-into-view, now with
+ * live YAML syntax highlighting: the typed prefix is re-tokenised and coloured
+ * each frame. The not-yet-typed remainder renders transparent so the block
+ * holds its final size from frame one — zero layout shift. Full text is exposed
+ * to assistive tech via aria-label; reduced motion shows it complete at once.
  */
 export function Typewriter({ text, speed = 11 }: TypewriterProps) {
   const ref = useRef<HTMLElement>(null)
@@ -55,10 +56,17 @@ export function Typewriter({ text, speed = 11 }: TypewriterProps) {
   }, [text, speed])
 
   const done = count >= text.length
+  const typed = tokenizeYaml(text.slice(0, count))
 
   return (
     <code ref={ref} className="typewriter" aria-label={text}>
-      <span aria-hidden="true">{text.slice(0, count)}</span>
+      <span aria-hidden="true">
+        {typed.map((tok, idx) => (
+          <Fragment key={idx}>
+            {tok.t === 'plain' ? tok.v : <span className={`tok-${tok.t}`}>{tok.v}</span>}
+          </Fragment>
+        ))}
+      </span>
       <span className={`tw-caret${done ? ' tw-caret-done' : ''}`} aria-hidden="true" />
       <span className="tw-rest" aria-hidden="true">{text.slice(count)}</span>
     </code>

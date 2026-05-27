@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { scrambleFrame } from '../lib/scramble'
 
 interface ScrambleTextProps {
   text: string
   className?: string
 }
-
-// Symbol-heavy set for a terminal "decode" texture.
-const GLYPHS = '!<>-_\\/[]{}=+*^?#·:;~01'
 
 /**
  * Resolves `text` from random glyphs left-to-right the first time it scrolls
@@ -35,13 +33,7 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
       const tick = (now: number) => {
         const p = Math.min(1, (now - start) / total)
         const revealed = Math.floor(p * text.length)
-        let out = ''
-        for (let i = 0; i < text.length; i++) {
-          const ch = text[i]
-          if (ch === ' ' || i < revealed) out += ch
-          else out += GLYPHS[(Math.random() * GLYPHS.length) | 0]
-        }
-        setDisplay(out)
+        setDisplay(scrambleFrame(text, revealed))
         if (p < 1) raf = requestAnimationFrame(tick)
         else setDisplay(text)
       }

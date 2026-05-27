@@ -5,18 +5,62 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Andy — PR Handoff Assistant by Refactor Labs. A GitHub Action that turns every pull request into a guided handoff: architecture, money/time impact, focused suggestions, risk map." />
+    <meta name="keywords" content="pull request review, GitHub Action, code review, PR handoff, architecture map, developer tools, Refactor Labs, Andy" />
+    <meta name="author" content="Refactor Labs" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://refactorlab.github.io/andy/" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafaf7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f0e0c" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="Andy" />
+
     <meta property="og:title" content="Andy — PR Handoff Assistant by Refactor Labs" />
     <meta property="og:description" content="The companion that explains your PR like the engineer who wrote it would." />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Andy by Refactor Labs" />
+    <meta property="og:url" content="https://refactorlab.github.io/andy/" />
+    <meta property="og:image" content="https://refactorlab.github.io/andy/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Andy — PR Handoff Assistant by Refactor Labs" />
+    <meta name="twitter:description" content="The PR review that explains what actually changed: architecture, impact, ranked suggestions, risk map." />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Andy — PR Handoff Assistant",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "GitHub Actions",
+        "description": "A GitHub Action that turns every pull request into a guided handoff: an architecture map, a money/time impact card, ranked code suggestions, and a risk quadrant.",
+        "url": "https://refactorlab.github.io/andy/",
+        "license": "https://github.com/refactorlab/andy/blob/main/LICENSE",
+        "author": { "@type": "Organization", "name": "Refactor Labs", "url": "https://github.com/refactorlab" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Andy — PR Handoff Assistant by Refactor Labs</title>
+    <!-- Prefetch the example review so the CTA opens instantly (ignored where unsupported). -->
+    <script type="speculationrules">
+      {
+        "prefetch": [{ "source": "list", "urls": ["./pr36-github-ui_2.html"] }]
+      }
+    </script>
     <script>
       // Theme bootstrap — runs before paint, no FOUC on reload.
+      // Honor a saved choice; otherwise fall back to the OS color scheme.
       (function () {
         try {
           var stored = localStorage.getItem('andy-theme');
-          document.documentElement.dataset.theme = stored === 'dark' ? 'dark' : 'light';
+          var theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.dataset.theme = theme;
         } catch (_) {
           document.documentElement.dataset.theme = 'light';
         }

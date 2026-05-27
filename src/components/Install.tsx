@@ -1,5 +1,6 @@
 import { Typewriter } from './Typewriter'
 import { ScrambleText } from './ScrambleText'
+import { CopyButton } from './CopyButton'
 
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
@@ -60,7 +61,7 @@ export function Install() {
                 <span /><span /><span />
               </div>
               <span className="code-path">.github/workflows/drift.yml</span>
-              <span className="code-lang">YAML</span>
+              <CopyButton text={yaml} />
             </div>
             <pre className="code-block"><Typewriter text={yaml} /></pre>
             <div className="code-foot">

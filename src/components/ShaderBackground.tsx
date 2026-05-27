@@ -94,6 +94,8 @@ export function ShaderBackground() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
+    // Low-power devices skip the GPU shader; the CSS aurora fallback shows.
+    if (document.documentElement.classList.contains('perf-lite')) return
     const gl = canvas.getContext('webgl2', {
       antialias: false,
       alpha: false,
@@ -182,6 +184,12 @@ export function ShaderBackground() {
       if (!running) render(performance.now())
     })
 
+    // Runtime governor asked us to back off → stop and reveal the CSS aurora.
+    const onPerfLite = () => {
+      stop()
+      document.documentElement.classList.remove('has-shader')
+    }
+
     readColors()
     resize()
     render(performance.now()) // first frame immediately (no black flash)
@@ -190,6 +198,7 @@ export function ShaderBackground() {
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     window.addEventListener('resize', onResize)
     document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('andy-perf-lite', onPerfLite)
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     start()
 
@@ -198,6 +207,7 @@ export function ShaderBackground() {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('resize', onResize)
       document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('andy-perf-lite', onPerfLite)
       themeObserver.disconnect()
       document.documentElement.classList.remove('has-shader')
       gl.deleteProgram(program)

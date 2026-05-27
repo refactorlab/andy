@@ -62,11 +62,15 @@ export function CountUp({ value, decimals = 0, prefix = '', suffix = '', duratio
     }
   }, [value, duration])
 
+  // The animating digits are decorative; screen readers get the final value once.
   return (
-    <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>
-      {prefix}
-      {display.toFixed(decimals)}
-      {suffix}
-    </span>
+    <>
+      <span ref={ref} aria-hidden="true" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {prefix}
+        {display.toFixed(decimals)}
+        {suffix}
+      </span>
+      <span className="sr-only">{prefix}{value.toFixed(decimals)}{suffix}</span>
+    </>
   )
 }
