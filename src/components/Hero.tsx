@@ -1,12 +1,27 @@
 import type { CSSProperties } from 'react'
 import { TiltCard } from './TiltCard'
 import { CountUp } from './CountUp'
+import { HeroCanvas } from './HeroCanvas'
+import { ScoreGauge } from './ScoreGauge'
+import { KineticHeading } from './KineticHeading'
+
+const HEADLINE = [
+  { text: 'The' },
+  { text: 'PR' },
+  { text: 'review' },
+  { text: 'that' },
+  { text: 'explains' },
+  { text: 'what', highlight: true },
+  { text: 'actually', highlight: true },
+  { text: 'changed.', highlight: true },
+]
 
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
 export function Hero() {
   return (
     <section className="hero" id="top">
+      <HeroCanvas />
       <div className="wrap">
         <div className="hero-grid">
           <div className="hero-copy" data-reveal-stagger>
@@ -15,10 +30,7 @@ export function Hero() {
               GitHub Action · MIT · v1
             </span>
 
-            <h1 className="hero-title">
-              The PR review that explains{' '}
-              <span className="hl">what actually changed</span>.
-            </h1>
+            <KineticHeading className="hero-title" words={HEADLINE} />
 
             <p className="hero-sub">
               Andy reads every pull request and posts one comment: an
@@ -45,6 +57,7 @@ export function Hero() {
           </div>
 
           <TiltCard className="hero-card" aria-label="Andy PR comment preview" revealDelay={0.18} maxTilt={7}>
+            <span className="hcard-scan" aria-hidden="true" />
             <header className="hcard-head">
               <div className="hcard-avatar" aria-hidden="true">A</div>
               <div className="hcard-meta">
@@ -59,9 +72,9 @@ export function Hero() {
 
             <div className="hcard-body">
               <div className="hcard-score">
-                <div>
-                  <div className="hcard-score-num"><CountUp value={8.4} decimals={1} /><span className="hcard-score-den">/10</span></div>
-                  <div className="hcard-score-label">PR health · 4-axis weighted</div>
+                <div className="hcard-gauge">
+                  <ScoreGauge value={8.4} />
+                  <div className="hcard-score-label">PR health<br />4-axis weighted</div>
                 </div>
                 <div className="hcard-pills">
                   <span className="pill pill-good">5 features</span>

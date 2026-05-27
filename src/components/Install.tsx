@@ -1,3 +1,5 @@
+import { Typewriter } from './Typewriter'
+
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
 const yaml = `name: Drift
@@ -9,6 +11,7 @@ permissions:
   contents: read
   pull-requests: write
   checks: write
+  models: read
 
 jobs:
   drift:
@@ -58,7 +61,7 @@ export function Install() {
               <span className="code-path">.github/workflows/drift.yml</span>
               <span className="code-lang">YAML</span>
             </div>
-            <pre className="code-block"><code>{yaml}</code></pre>
+            <pre className="code-block"><Typewriter text={yaml} /></pre>
             <div className="code-foot">
               <a className="btn btn-primary btn-sm" data-magnetic href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
                 Install from Marketplace →

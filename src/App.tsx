@@ -6,6 +6,10 @@ import { Artifacts } from './components/Artifacts'
 import { Install } from './components/Install'
 import { Example } from './components/Example'
 import { Footer } from './components/Footer'
+import { Marquee } from './components/Marquee'
+import { Cursor } from './components/Cursor'
+import { ShaderBackground } from './components/ShaderBackground'
+import { SectionRail } from './components/SectionRail'
 import { useScrollReveal } from './lib/useScrollReveal'
 import { useMagnetic } from './lib/useMagnetic'
 
@@ -14,17 +18,30 @@ export default function App() {
   useMagnetic()
   return (
     <div className="page">
+      <Cursor />
+      <ShaderBackground />
       <div className="aurora" aria-hidden="true">
         <span className="aurora-blob aurora-blob-1" />
         <span className="aurora-blob aurora-blob-2" />
         <span className="aurora-blob aurora-blob-3" />
       </div>
       <div className="grain" aria-hidden="true" />
+      <SectionRail />
       <Nav />
       <main>
         <Hero />
         <Problem />
         <Artifacts />
+        <Marquee
+          items={[
+            'architecture map',
+            'value card',
+            'risk quadrant',
+            'ranked suggestions',
+            'hot-touch mindmap',
+            'business context',
+          ]}
+        />
         <Install />
         <Example />
       </main>
