@@ -60,7 +60,7 @@ export function Install() {
             </div>
             <pre className="code-block"><code>{yaml}</code></pre>
             <div className="code-foot">
-              <a className="btn btn-primary btn-sm" href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-primary btn-sm" data-magnetic href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
                 Install from Marketplace →
               </a>
               <a className="link-inline" href="https://github.com/refactorlab/andy" target="_blank" rel="noopener noreferrer">

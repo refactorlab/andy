@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { TiltCard } from './TiltCard'
 
 const items = [
   {
@@ -56,7 +56,7 @@ export function Artifacts() {
 
         <div className="artifact-grid">
           {items.map((it, i) => (
-            <article className="artifact" key={it.title} data-reveal style={{ '--reveal-delay': `${(i % 3) * 0.08}s` } as CSSProperties}>
+            <TiltCard className="artifact" key={it.title} revealDelay={(i % 3) * 0.08} maxTilt={5}>
               <div className="artifact-icon" aria-hidden="true">{it.icon}</div>
               <h3>{it.title}</h3>
               <p>{it.body}</p>
@@ -65,7 +65,7 @@ export function Artifacts() {
                   <span className="tagchip" key={t}>{t}</span>
                 ))}
               </div>
-            </article>
+            </TiltCard>
           ))}
         </div>
       </div>

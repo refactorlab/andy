@@ -1,9 +1,20 @@
 import type { CSSProperties } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 import { useScroll } from '../lib/useScroll'
+import { useScrollSpy } from '../lib/useScrollSpy'
+
+const NAV_LINKS = [
+  { id: 'problem', label: 'Problem' },
+  { id: 'what', label: 'What you get' },
+  { id: 'install', label: 'Install' },
+  { id: 'example', label: 'Example' },
+]
+
+const SECTION_IDS = NAV_LINKS.map((link) => link.id)
 
 export function Nav() {
   const { scrolled, progress } = useScroll()
+  const active = useScrollSpy(SECTION_IDS)
   return (
     <nav className={`nav${scrolled ? ' nav-scrolled' : ''}`}>
       <div className="nav-inner">
@@ -15,10 +26,16 @@ export function Nav() {
         </a>
 
         <div className="nav-links" aria-label="Sections">
-          <a href="#problem">Problem</a>
-          <a href="#what">What you get</a>
-          <a href="#install">Install</a>
-          <a href="#example">Example</a>
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              className={active === link.id ? 'active' : undefined}
+              aria-current={active === link.id ? 'true' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
 
         <div className="nav-actions">

@@ -20,6 +20,78 @@ main {
   flex: 1;
 }
 
+/* ─── Ambient backdrop: drifting aurora + film grain ──────────────────────
+ * Two fixed, non-interactive layers behind all content. The aurora supplies
+ * the page's colour (replacing the old static body gradients); the grain adds
+ * a faint analog texture. Drift pauses automatically under reduced motion. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+}
+.aurora-blob-1 {
+  width: 52vw;
+  height: 52vw;
+  top: -14%;
+  left: -8%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%);
+  opacity: 0.4;
+  animation: aurora-drift-1 22s var(--ease-in-out) infinite;
+}
+.aurora-blob-2 {
+  width: 46vw;
+  height: 46vw;
+  right: -10%;
+  bottom: -16%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 55%, transparent), transparent 70%);
+  opacity: 0.35;
+  animation: aurora-drift-2 27s var(--ease-in-out) infinite;
+}
+.aurora-blob-3 {
+  width: 42vw;
+  height: 42vw;
+  top: 34%;
+  left: 42%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--info) 35%, transparent), transparent 70%);
+  opacity: 0.22;
+  animation: aurora-drift-3 31s var(--ease-in-out) infinite;
+}
+[data-theme='dark'] .aurora-blob-1 { opacity: 0.26; }
+[data-theme='dark'] .aurora-blob-2 { opacity: 0.22; }
+[data-theme='dark'] .aurora-blob-3 { opacity: 0.16; }
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 170px 170px;
+}
+[data-theme='dark'] .grain { opacity: 0.06; }
+
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8%, 7%) scale(1.16); }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-7%, -9%) scale(1.12); }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6%, 8%) scale(1.22); }
+}
+
 /* ─── Nav ──────────────────────────────────────────────────────────────── */
 
 .nav {
@@ -122,6 +194,8 @@ main {
 }
 .nav-links a:hover { color: var(--text); opacity: 1; text-decoration: none; }
 .nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after { transform: scaleX(1); }
 
 .nav-actions {
   display: flex;
@@ -243,14 +317,20 @@ main {
     background 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
 }
 .btn:hover { text-decoration: none; opacity: 1; }
-.btn:active { transform: translateY(0) scale(0.98); transition-duration: 0.06s; }
+.btn:active { transition-duration: 0.06s; }
 .btn-sm { padding: 8px 13px; font-size: 13px; }
 
 .btn-primary {
   background: var(--gradient);
   color: #fff;
   box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+  /* Composed transform: magnetic pull + hover lift + press, all via vars so
+   * they never clobber one another. */
+  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px)) translateY(var(--lift, 0px))
+    scale(var(--press, 1));
 }
+.btn-primary:hover { --lift: -2px; }
+.btn-primary:active { --press: 0.97; }
 /* Light sheen that sweeps across on hover. */
 .btn-primary::after {
   content: '';
@@ -262,7 +342,6 @@ main {
   pointer-events: none;
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
   box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 40%, transparent);
   filter: saturate(1.08);
 }
@@ -272,12 +351,14 @@ main {
   background: var(--bg-card);
   color: var(--text);
   border-color: var(--border);
+  transform: translateY(var(--lift, 0px)) scale(var(--press, 1));
 }
 .btn-ghost:hover {
+  --lift: -2px;
   border-color: var(--border-strong);
   background: var(--bg-soft);
-  transform: translateY(-2px);
 }
+.btn-ghost:active { --press: 0.97; }
 
 .link-inline {
   font-size: 13px;
@@ -589,12 +670,10 @@ main {
   border-radius: 14px;
   background: var(--bg-card);
   padding: 22px 20px;
-  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
-    box-shadow 0.3s var(--ease-out);
 }
 .artifact:hover {
+  --pop: -6px;
   border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
-  transform: translateY(-4px);
   box-shadow: 0 18px 40px color-mix(in srgb, var(--accent) 12%, rgba(0, 0, 0, 0.06));
 }
 .artifact-icon {
@@ -918,6 +997,42 @@ main {
  * no-preference`. The reduced-motion fallback (index.css) neutralizes
  * durations globally, so static defaults elsewhere stay fully visible.
  * ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Pointer-reactive cards: 3D tilt + cursor spotlight ─────────────────────
+ * Two layers: `.tilt-scene` (entrance + perspective) wraps `.tilt-card`
+ * (cursor tilt + glow). Inert without JS — vars default to a flat, glow-off
+ * resting state, so touch / reduced-motion render a normal static card. */
+.tilt-scene {
+  display: flex;
+  perspective: 1100px;
+}
+.tilt-card {
+  position: relative;
+  flex: 1;
+  isolation: isolate;
+  transform: translateY(var(--pop, 0px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.32s var(--ease-out), box-shadow 0.32s var(--ease-out),
+    border-color 0.32s var(--ease-out);
+  will-change: transform;
+}
+.tilt-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 62%
+  );
+  opacity: var(--active, 0);
+  transition: opacity 0.35s var(--ease-out);
+  pointer-events: none;
+}
+.hero-card:hover {
+  --pop: -5px;
+}
 
 /* Brand logo nudges to life on hover. */
 .nav-logo,

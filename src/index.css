@@ -96,18 +96,8 @@ body {
 }
 
 body {
-  background-image:
-    radial-gradient(circle at 18% 12%, rgba(255, 181, 71, 0.18) 0%, transparent 40%),
-    radial-gradient(circle at 82% 78%, rgba(255, 107, 61, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(255, 230, 200, 0.10) 0%, transparent 60%);
-  background-attachment: fixed;
   min-height: 100vh;
-}
-
-[data-theme='dark'] body {
-  background-image:
-    radial-gradient(circle at 18% 12%, rgba(255, 122, 79, 0.10) 0%, transparent 45%),
-    radial-gradient(circle at 82% 78%, rgba(255, 181, 71, 0.06) 0%, transparent 50%);
+  /* Colour now comes from the animated .aurora layer (see App.css). */
 }
 
 a {
@@ -152,13 +142,30 @@ html {
   border-radius: 4px;
 }
 
-/* Theme switch crossfade via the View Transitions API (Chromium). Falls back
- * to an instant swap where unsupported — see lib/theme.ts. */
+/* Theme switch via the View Transitions API (Chromium): the incoming theme
+ * wipes in as a circle expanding from the toggle click. Falls back to an
+ * instant swap where unsupported — see lib/theme.ts. */
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.45s;
-    animation-timing-function: var(--ease-in-out);
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+  ::view-transition-new(root) {
+    z-index: 9999;
+    animation: vt-circle-reveal 0.5s var(--ease-in-out) both;
+  }
+}
+
+@keyframes vt-circle-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 50%));
   }
 }
 

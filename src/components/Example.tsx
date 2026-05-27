@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { CountUp } from './CountUp'
 
 export function Example() {
   return (
@@ -30,7 +31,7 @@ export function Example() {
                 <div className="axis" key={a.label}>
                   <span className="axis-label">{a.label}</span>
                   <div className="axis-track"><div className="axis-fill axis-good" style={{ '--w': `${a.pct}%` } as CSSProperties} /></div>
-                  <span className="axis-value">▲ {a.pct}%</span>
+                  <span className="axis-value">▲ <CountUp value={a.pct} suffix="%" /></span>
                 </div>
               ))}
             </div>
@@ -63,7 +64,7 @@ export function Example() {
         </div>
 
         <div className="example-cta" data-reveal>
-          <a className="btn btn-primary" href="./pr36-github-ui_2.html" target="_blank" rel="noopener noreferrer">
+          <a className="btn btn-primary" data-magnetic href="./pr36-github-ui_2.html" target="_blank" rel="noopener noreferrer">
             Open the full example review →
           </a>
         </div>

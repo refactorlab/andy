@@ -7,7 +7,7 @@ export function ThemeToggle() {
     <button
       type="button"
       className="theme-toggle"
-      onClick={() => setTheme(next)}
+      onClick={(e) => setTheme(next, { x: e.clientX, y: e.clientY })}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
     >
