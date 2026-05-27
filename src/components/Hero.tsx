@@ -4,6 +4,8 @@ import { CountUp } from './CountUp'
 import { HeroCanvas } from './HeroCanvas'
 import { ScoreGauge } from './ScoreGauge'
 import { KineticHeading } from './KineticHeading'
+import { SafeBoundary } from './SafeBoundary'
+import { useMouseParallax } from '../lib/useMouseParallax'
 
 const HEADLINE = [
   { text: 'The' },
@@ -19,9 +21,10 @@ const HEADLINE = [
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
 export function Hero() {
+  const heroRef = useMouseParallax<HTMLElement>()
   return (
-    <section className="hero" id="top">
-      <HeroCanvas />
+    <section className="hero" id="top" ref={heroRef}>
+      <SafeBoundary label="hero-canvas"><HeroCanvas /></SafeBoundary>
       <div className="wrap">
         <div className="hero-grid">
           <div className="hero-copy" data-reveal-stagger>

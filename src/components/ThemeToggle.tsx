@@ -1,13 +1,13 @@
 import { useTheme } from '../lib/theme'
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useTheme()
+  const [theme, toggle] = useTheme()
   const next = theme === 'light' ? 'dark' : 'light'
   return (
     <button
       type="button"
       className="theme-toggle"
-      onClick={(e) => setTheme(next, { x: e.clientX, y: e.clientY })}
+      onClick={(e) => toggle({ x: e.clientX, y: e.clientY })}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
     >

@@ -39,6 +39,20 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Consolas, monospace;
 
+  /* Fluid type scale (~1.2 ratio) — desktop maxes match the old fixed sizes;
+   * mobile scales down smoothly. */
+  --step-0: clamp(0.94rem, 0.89rem + 0.2vw, 1rem);
+  --step-1: clamp(1.05rem, 0.98rem + 0.3vw, 1.19rem);
+  --step-2: clamp(1.2rem, 1.08rem + 0.5vw, 1.5rem);
+  --step-4: clamp(1.75rem, 1.3rem + 2.2vw, 2.5rem);
+  --step-5: clamp(2.25rem, 1.4rem + 4.2vw, 3.75rem);
+
+  /* Fluid spacing scale. */
+  --space-m: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-l: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+  --space-xl: clamp(2.5rem, 1.9rem + 3vw, 4rem);
+  --space-2xl: clamp(3.25rem, 2.4rem + 4.4vw, 5.5rem);
+
   /* Motion — shared easing curves so every animation feels like one system. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: decisive, premium */
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
@@ -84,6 +98,24 @@
   initial-value: 0deg;
 }
 
+/* Perceptual (OKLCH) gradient interpolation — smoother, more vivid mid-tones.
+ * sRGB definitions above remain the fallback; this upgrades where supported. */
+@supports (background: linear-gradient(in oklch, red, blue)) {
+  :root {
+    --gradient: linear-gradient(135deg in oklch, #ff6b3d 0%, #ff9558 50%, #ffb547 100%);
+  }
+  [data-theme='dark'] {
+    --gradient: linear-gradient(135deg in oklch, #ff7a4f 0%, #ff9558 50%, #ffc070 100%);
+  }
+}
+
+/* Relative-color syntax: derive a brighter accent from the base, no hand-tuning. */
+@supports (color: oklch(from red l c h)) {
+  :root {
+    --accent-bright: oklch(from var(--accent) calc(l + 0.06) calc(c + 0.03) h);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -107,6 +139,14 @@ body {
 body {
   min-height: 100vh;
   /* Colour now comes from the animated .aurora layer (see App.css). */
+}
+
+/* Modern typesetting: balance headline line lengths, avoid orphans in prose. */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
 }
 
 a {
@@ -151,6 +191,38 @@ html {
   border-radius: 4px;
 }
 
+/* Visually-hidden but screen-reader-available. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard skip link — off-screen until focused. */
+.skip-link {
+  position: fixed;
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
+  z-index: 2000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  transform: translateY(-150%);
+  transition: transform 0.2s var(--ease-out);
+}
+.skip-link:focus {
+  transform: translateY(0);
+  text-decoration: none;
+}
+
 /* Theme switch via the View Transitions API (Chromium): the incoming theme
  * wipes in as a circle expanding from the toggle click. Falls back to an
  * instant swap where unsupported — see lib/theme.ts. */
@@ -189,5 +261,36 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Drop frosted-glass blurs for users who prefer reduced transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  .nav,
+  .nav-scrolled,
+  dialog.cmdk::backdrop {
+    background: var(--bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .grain {
+    display: none;
+  }
+}
+
+/* Firmer borders + text for high-contrast preference. */
+@media (prefers-contrast: more) {
+  :root {
+    --border: #c7c4ba;
+    --border-strong: #9a978d;
+    --text-dim: #4a4a4a;
+  }
+  [data-theme='dark'] {
+    --border: #4a463f;
+    --border-strong: #6a655c;
+    --text-dim: #c9c4ba;
+  }
+  :focus-visible {
+    outline-width: 3px;
   }
 }

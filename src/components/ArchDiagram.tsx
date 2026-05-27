@@ -21,8 +21,9 @@ const BRANCHES: Branch[] = [
   { label: 'Ranked suggestions', y: 156, tone: 'var(--info)' },
 ]
 
-// Curved connector from Andy's output edge to each branch node.
-const EDGE_PATHS = [
+// All connectors: PR→Andy, then Andy→each branch.
+const EDGES = [
+  'M144,101 L320,101',
   'M430,98 C492,82 502,31 560,31',
   'M430,100 C492,96 502,79 560,79',
   'M430,103 C492,112 502,127 560,127',
@@ -68,11 +69,21 @@ export function ArchDiagram() {
           </linearGradient>
         </defs>
 
-        {/* edges */}
-        <path className="arch-edge" pathLength={1} style={delay(1)} d="M144,101 L320,101" />
-        {EDGE_PATHS.map((d, i) => (
-          <path className="arch-edge" pathLength={1} style={delay(2 + i)} d={d} key={d} />
+        {/* edges draw on, then data-flow pulses travel them (CSS Motion Path) */}
+        {EDGES.map((d, i) => (
+          <path className="arch-edge" pathLength={1} style={delay(1 + i)} d={d} key={d} />
         ))}
+        {drawn &&
+          EDGES.map((d, i) => (
+            <circle
+              key={`pulse-${i}`}
+              className="arch-pulse"
+              cx={0}
+              cy={0}
+              r={3}
+              style={{ offsetPath: `path('${d}')`, '--pd': `${i * 0.5}s` } as CSSProperties}
+            />
+          ))}
 
         {/* PR source node */}
         <g className="arch-node" style={delay(0)}>
