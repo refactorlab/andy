@@ -194,7 +194,12 @@ main {
   font-size: 14px;
   font-weight: 500;
   position: relative;
-  transition: color 0.2s ease;
+  font-variation-settings: 'wght' 500;
+  transition: color 0.2s ease, font-variation-settings 0.3s var(--ease-out);
+}
+.nav-links a:hover,
+.nav-links a.active {
+  font-variation-settings: 'wght' 680;
 }
 .nav-links a::after {
   content: '';
@@ -739,6 +744,70 @@ main {
   margin: 0 26px;
   transform: translateY(-1px);
 }
+
+/* ── Self-drawing architecture diagram ────────────────────────────────────
+ * Connector paths stroke on (pathLength normalised to 1) and nodes pop in,
+ * staggered via --d, once `.is-drawn` is set. */
+.arch-wrap {
+  margin: 28px 0 4px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-card) 70%, transparent);
+  padding: 18px 20px 8px;
+}
+.arch-cap {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.arch-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.arch-box {
+  fill: var(--bg-soft);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+.arch-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--text);
+  dominant-baseline: middle;
+}
+.arch-andy-text {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  fill: #fff;
+  dominant-baseline: middle;
+}
+.arch-edge {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s var(--ease-out);
+  transition-delay: var(--d, 0s);
+}
+.arch-node {
+  opacity: 0;
+  transform: scale(0.92);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-spring);
+  transition-delay: var(--d, 0s);
+}
+.arch-wrap.is-drawn .arch-edge {
+  stroke-dashoffset: 0;
+}
+.arch-wrap.is-drawn .arch-node {
+  opacity: 1;
+  transform: none;
+}
 .pill {
   font-size: 11px;
   font-family: var(--font-mono);
@@ -1248,6 +1317,39 @@ main {
 .hero-card:hover {
   --pop: -5px;
 }
+/* Slowly rotating conic-gradient ring (registered --bd-angle drives it).
+ * Border-only via the mask-composite trick; sits above the card, edges only. */
+.hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--bd-angle, 0deg),
+    transparent 52%,
+    color-mix(in srgb, var(--accent) 75%, transparent),
+    color-mix(in srgb, var(--accent-2) 85%, transparent),
+    transparent 96%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.75;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-card::after {
+    animation: bd-spin 7s linear infinite;
+  }
+}
+@keyframes bd-spin {
+  to {
+    --bd-angle: 360deg;
+  }
+}
 
 /* Brand logo nudges to life on hover. */
 .nav-logo,
@@ -1342,6 +1444,7 @@ main {
     opacity: 0;
     transform: translateY(108%) rotateX(-45deg);
     filter: blur(6px);
+    font-variation-settings: 'wght' 300;
     transform-origin: bottom center;
     animation: kw-in 0.85s var(--ease-out) both;
     animation-delay: calc(var(--i) * 65ms + 0.1s);
@@ -1352,6 +1455,7 @@ main {
     opacity: 1;
     transform: none;
     filter: blur(0);
+    font-variation-settings: 'wght' 800;
   }
 }
 

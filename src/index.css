@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=JetBrains+Mono:wght@100..800&display=swap');
 
 :root {
   /* ───────────────────── Light theme (default) ─────────────────────
@@ -77,6 +77,13 @@
   color-scheme: dark;
 }
 
+/* Registered so it can be animated/interpolated (rotating conic border). */
+@property --bd-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -93,6 +100,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Let the variable font pick its optical-size axis per font-size. */
+  font-optical-sizing: auto;
 }
 
 body {

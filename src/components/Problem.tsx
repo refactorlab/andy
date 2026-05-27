@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { ScrambleText } from './ScrambleText'
 
 const pains = [
   {
@@ -23,7 +24,7 @@ export function Problem() {
     <section className="section section-tight" id="problem">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <span className="kicker">// the pull-request review, today</span>
+          <ScrambleText className="kicker" text="// the pull-request review, today" />
           <h2>Three questions every PR comment fails to answer.</h2>
         </header>
 

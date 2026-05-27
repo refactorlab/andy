@@ -20,12 +20,20 @@ export function Cursor() {
     let targetY = window.innerHeight / 2
     let x = targetX
     let y = targetY
+    let vx = 0
+    let vy = 0
     let raf = 0
     let visible = false
 
+    // Critically-ish damped spring — organic trail with a hint of overshoot.
+    const STIFFNESS = 0.16
+    const DAMPING = 0.72
+
     const loop = () => {
-      x += (targetX - x) * 0.18
-      y += (targetY - y) * 0.18
+      vx = (vx + (targetX - x) * STIFFNESS) * DAMPING
+      vy = (vy + (targetY - y) * STIFFNESS) * DAMPING
+      x += vx
+      y += vy
       ring.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`
       raf = requestAnimationFrame(loop)
     }

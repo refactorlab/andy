@@ -1,4 +1,5 @@
 import { TiltCard } from './TiltCard'
+import { ScrambleText } from './ScrambleText'
 
 const items = [
   {
@@ -44,7 +45,7 @@ export function Artifacts() {
     <section className="section" id="what">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <span className="kicker">// what andy ships in every review</span>
+          <ScrambleText className="kicker" text="// what andy ships in every review" />
           <h2>Six artifacts. <span className="hl">One PR comment.</span></h2>
           <p className="section-lede">
             One sticky comment per pull request, re-rendered on every push.

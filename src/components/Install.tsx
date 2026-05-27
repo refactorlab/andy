@@ -1,4 +1,5 @@
 import { Typewriter } from './Typewriter'
+import { ScrambleText } from './ScrambleText'
 
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
@@ -44,7 +45,7 @@ export function Install() {
     <section className="section section-alt" id="install">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <span className="kicker">// install in 30 seconds</span>
+          <ScrambleText className="kicker" text="// install in 30 seconds" />
           <h2>One YAML file. Then push.</h2>
           <p className="section-lede">
             Andy runs as a GitHub Action on your own runner. Nothing leaves the
