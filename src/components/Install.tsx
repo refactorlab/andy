@@ -40,7 +40,7 @@ export function Install() {
   return (
     <section className="section section-alt" id="install">
       <div className="wrap">
-        <header className="section-head">
+        <header className="section-head" data-reveal>
           <span className="kicker">// install in 30 seconds</span>
           <h2>One YAML file. Then push.</h2>
           <p className="section-lede">
@@ -50,7 +50,7 @@ export function Install() {
         </header>
 
         <div className="install-grid">
-          <div className="code-card" aria-label=".github/workflows/drift.yml">
+          <div className="code-card" aria-label=".github/workflows/drift.yml" data-reveal>
             <div className="code-head">
               <div className="code-dots" aria-hidden="true">
                 <span /><span /><span />
@@ -69,7 +69,7 @@ export function Install() {
             </div>
           </div>
 
-          <ol className="steps">
+          <ol className="steps" data-reveal-stagger>
             {steps.map((s) => (
               <li key={s.n} className="step">
                 <span className="step-num">{s.n}</span>

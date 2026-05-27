@@ -1,8 +1,10 @@
+import type { CSSProperties } from 'react'
+
 export function Example() {
   return (
     <section className="section" id="example">
       <div className="wrap">
-        <header className="section-head">
+        <header className="section-head" data-reveal>
           <span className="kicker">// inside an andy review</span>
           <h2>A peek at the output.</h2>
           <p className="section-lede">
@@ -13,7 +15,7 @@ export function Example() {
         </header>
 
         <div className="example-grid">
-          <article className="example-card">
+          <article className="example-card" data-reveal>
             <div className="example-head">
               <span>🎯 PR Value Card</span>
               <span className="example-scale">▲ improvement</span>
@@ -27,7 +29,7 @@ export function Example() {
               ].map((a) => (
                 <div className="axis" key={a.label}>
                   <span className="axis-label">{a.label}</span>
-                  <div className="axis-track"><div className="axis-fill axis-good" style={{ width: `${a.pct}%` }} /></div>
+                  <div className="axis-track"><div className="axis-fill axis-good" style={{ '--w': `${a.pct}%` } as CSSProperties} /></div>
                   <span className="axis-value">▲ {a.pct}%</span>
                 </div>
               ))}
@@ -39,7 +41,7 @@ export function Example() {
             </p>
           </article>
 
-          <article className="example-card">
+          <article className="example-card" data-reveal style={{ '--reveal-delay': '0.1s' } as CSSProperties}>
             <div className="example-head">
               <span className="suggestion-cat">🅑 Product correctness</span>
               <span className="example-file">compact.rs</span>
@@ -60,7 +62,7 @@ export function Example() {
           </article>
         </div>
 
-        <div className="example-cta">
+        <div className="example-cta" data-reveal>
           <a className="btn btn-primary" href="./pr36-github-ui_2.html" target="_blank" rel="noopener noreferrer">
             Open the full example review →
           </a>

@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 const pains = [
   {
     label: '01',
@@ -20,14 +22,14 @@ export function Problem() {
   return (
     <section className="section section-tight" id="problem">
       <div className="wrap">
-        <header className="section-head">
+        <header className="section-head" data-reveal>
           <span className="kicker">// the pull-request review, today</span>
           <h2>Three questions every PR comment fails to answer.</h2>
         </header>
 
         <div className="problem-grid">
-          {pains.map((p) => (
-            <article className="problem-card" key={p.label}>
+          {pains.map((p, i) => (
+            <article className="problem-card" key={p.label} data-reveal style={{ '--reveal-delay': `${i * 0.09}s` } as CSSProperties}>
               <div className="problem-num">{p.label}</div>
               <h3>{p.title}</h3>
               <p>{p.body}</p>

@@ -39,6 +39,11 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Consolas, monospace;
 
+  /* Motion — shared easing curves so every animation feels like one system. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: decisive, premium */
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.5, 1); /* subtle overshoot */
+
   color-scheme: light;
 }
 
@@ -128,4 +133,45 @@ svg {
 ::selection {
   background: rgba(255, 107, 61, 0.25);
   color: var(--text);
+}
+
+/* ─── Global motion & a11y ────────────────────────────────────────────────
+ * Smooth in-page navigation, with a keyboard-focus ring that matches the
+ * brand. Anchored sections clear the sticky nav. All honored under reduced
+ * motion below. */
+html {
+  scroll-behavior: smooth;
+}
+[id] {
+  scroll-margin-top: 88px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Theme switch crossfade via the View Transitions API (Chromium). Falls back
+ * to an instant swap where unsupported — see lib/theme.ts. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.45s;
+    animation-timing-function: var(--ease-in-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

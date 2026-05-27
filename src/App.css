@@ -30,6 +30,30 @@ main {
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   background: color-mix(in srgb, var(--bg) 75%, transparent);
   border-bottom: 1px solid var(--border);
+  transition: background 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+/* Elevates once the page scrolls, so the bar reads as floating over content. */
+.nav-scrolled {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  box-shadow: 0 1px 0 var(--border), 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+[data-theme='dark'] .nav-scrolled {
+  box-shadow: 0 1px 0 var(--border), 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Reading-progress bar pinned to the bottom edge of the sticky nav. */
+.nav-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  background: var(--gradient);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 50%, transparent);
+  will-change: transform;
 }
 
 .nav-inner {
@@ -80,8 +104,24 @@ main {
   color: var(--text-dim);
   font-size: 14px;
   font-weight: 500;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gradient);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease-out);
 }
 .nav-links a:hover { color: var(--text); opacity: 1; text-decoration: none; }
+.nav-links a:hover::after { transform: scaleX(1); }
 
 .nav-actions {
   display: flex;
@@ -178,7 +218,8 @@ main {
 }
 
 .hl {
-  background: var(--gradient);
+  background: linear-gradient(110deg, var(--accent) 0%, var(--accent-2) 42%, var(--accent) 84%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -196,9 +237,13 @@ main {
   font-weight: 600;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out),
+    background 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
 }
 .btn:hover { text-decoration: none; opacity: 1; }
+.btn:active { transform: translateY(0) scale(0.98); transition-duration: 0.06s; }
 .btn-sm { padding: 8px 13px; font-size: 13px; }
 
 .btn-primary {
@@ -206,10 +251,22 @@ main {
   color: #fff;
   box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 28%, transparent);
 }
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 36%, transparent);
+/* Light sheen that sweeps across on hover. */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.35) 50%, transparent 75%);
+  transform: translateX(-130%);
+  transition: transform 0.7s var(--ease-out);
+  pointer-events: none;
 }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 40%, transparent);
+  filter: saturate(1.08);
+}
+.btn-primary:hover::after { transform: translateX(130%); }
 
 .btn-ghost {
   background: var(--bg-card);
@@ -219,6 +276,7 @@ main {
 .btn-ghost:hover {
   border-color: var(--border-strong);
   background: var(--bg-soft);
+  transform: translateY(-2px);
 }
 
 .link-inline {
@@ -450,6 +508,7 @@ main {
 .axis-fill {
   height: 100%;
   border-radius: 100px;
+  width: var(--w, 0%);
 }
 .axis-good { background: var(--gradient); }
 .axis-info { background: linear-gradient(90deg, var(--info), color-mix(in srgb, var(--info) 50%, var(--accent))); }
@@ -488,6 +547,13 @@ main {
   background: var(--bg-card);
   padding: 24px 22px;
   position: relative;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+.problem-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 .problem-card h3 {
   font-size: 19px;
@@ -523,12 +589,13 @@ main {
   border-radius: 14px;
   background: var(--bg-card);
   padding: 22px 20px;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
 }
 .artifact:hover {
-  border-color: var(--border-strong);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--accent) 12%, rgba(0, 0, 0, 0.06));
 }
 .artifact-icon {
   width: 36px;
@@ -540,6 +607,10 @@ main {
   justify-content: center;
   font-size: 18px;
   margin-bottom: 12px;
+  transition: transform 0.35s var(--ease-spring);
+}
+.artifact:hover .artifact-icon {
+  transform: scale(1.12) rotate(-6deg);
 }
 .artifact h3 {
   margin: 0 0 6px;
@@ -685,6 +756,13 @@ main {
   background: var(--bg-card);
   padding: 18px 18px;
   box-shadow: var(--shadow-sm);
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+.example-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 .example-head {
   display: flex;
@@ -831,4 +909,118 @@ main {
   font-size: 12.5px;
   color: var(--text-faint);
   font-family: var(--font-mono);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Motion & micro-interactions
+ *
+ * Every animated default lives here, gated behind `prefers-reduced-motion:
+ * no-preference`. The reduced-motion fallback (index.css) neutralizes
+ * durations globally, so static defaults elsewhere stay fully visible.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* Brand logo nudges to life on hover. */
+.nav-logo,
+.footer-logo {
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.3s var(--ease-out);
+}
+.nav-brand:hover .nav-logo {
+  transform: rotate(-6deg) scale(1.08);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.footer-brand:hover .footer-logo {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Scroll-reveal: single element ──────────────────────────────────── */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0s);
+    will-change: opacity, transform;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Scroll-reveal: stagger direct children ─────────────────────────── */
+  [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  [data-reveal-stagger].is-visible > * {
+    animation: reveal-up 0.65s var(--ease-out) both;
+  }
+  [data-reveal-stagger].is-visible > *:nth-child(1) { animation-delay: 0.04s; }
+  [data-reveal-stagger].is-visible > *:nth-child(2) { animation-delay: 0.12s; }
+  [data-reveal-stagger].is-visible > *:nth-child(3) { animation-delay: 0.20s; }
+  [data-reveal-stagger].is-visible > *:nth-child(4) { animation-delay: 0.28s; }
+  [data-reveal-stagger].is-visible > *:nth-child(5) { animation-delay: 0.36s; }
+  [data-reveal-stagger].is-visible > *:nth-child(6) { animation-delay: 0.44s; }
+
+  /* ── Data bars fill once their card is revealed ─────────────────────── */
+  .axis-fill {
+    width: 0;
+  }
+  .is-visible .axis-fill {
+    animation: bar-fill 1.15s var(--ease-out) 0.15s both;
+  }
+
+  /* ── Ambient loops ──────────────────────────────────────────────────── */
+  .hl {
+    animation: hl-shine 7s linear infinite;
+  }
+  .tag-dot {
+    animation: dot-pulse 2.2s var(--ease-in-out) infinite;
+  }
+  .hero::before {
+    animation: float-blob 16s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes reveal-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bar-fill {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--w, 0%);
+  }
+}
+
+@keyframes hl-shine {
+  to {
+    background-position: 220% center;
+  }
+}
+
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--success) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 0%, transparent);
+  }
+}
+
+@keyframes float-blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-4%, 5%) scale(1.1);
+  }
 }

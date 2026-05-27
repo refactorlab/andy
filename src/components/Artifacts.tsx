@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 const items = [
   {
     icon: '🏗',
@@ -41,7 +43,7 @@ export function Artifacts() {
   return (
     <section className="section" id="what">
       <div className="wrap">
-        <header className="section-head">
+        <header className="section-head" data-reveal>
           <span className="kicker">// what andy ships in every review</span>
           <h2>Six artifacts. <span className="hl">One PR comment.</span></h2>
           <p className="section-lede">
@@ -53,8 +55,8 @@ export function Artifacts() {
         </header>
 
         <div className="artifact-grid">
-          {items.map((it) => (
-            <article className="artifact" key={it.title}>
+          {items.map((it, i) => (
+            <article className="artifact" key={it.title} data-reveal style={{ '--reveal-delay': `${(i % 3) * 0.08}s` } as CSSProperties}>
               <div className="artifact-icon" aria-hidden="true">{it.icon}</div>
               <h3>{it.title}</h3>
               <p>{it.body}</p>

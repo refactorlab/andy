@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
 export function Hero() {
@@ -5,7 +7,7 @@ export function Hero() {
     <section className="hero" id="top">
       <div className="wrap">
         <div className="hero-grid">
-          <div className="hero-copy">
+          <div className="hero-copy" data-reveal-stagger>
             <span className="tag">
               <span className="tag-dot" />
               GitHub Action · MIT · v1
@@ -40,7 +42,7 @@ export function Hero() {
             </ul>
           </div>
 
-          <aside className="hero-card" aria-label="Andy PR comment preview">
+          <aside className="hero-card" aria-label="Andy PR comment preview" data-reveal style={{ '--reveal-delay': '0.18s' } as CSSProperties}>
             <header className="hcard-head">
               <div className="hcard-avatar" aria-hidden="true">A</div>
               <div className="hcard-meta">
@@ -75,7 +77,7 @@ export function Hero() {
                 ].map((a) => (
                   <div className="axis" key={a.label}>
                     <span className="axis-label">{a.label}</span>
-                    <div className="axis-track"><div className={`axis-fill axis-${a.tone}`} style={{ width: `${a.pct}%` }} /></div>
+                    <div className="axis-track"><div className={`axis-fill axis-${a.tone}`} style={{ '--w': `${a.pct}%` } as CSSProperties} /></div>
                     <span className="axis-value">{a.value}</span>
                   </div>
                 ))}

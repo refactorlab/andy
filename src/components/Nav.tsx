@@ -1,8 +1,11 @@
+import type { CSSProperties } from 'react'
 import { ThemeToggle } from './ThemeToggle'
+import { useScroll } from '../lib/useScroll'
 
 export function Nav() {
+  const { scrolled, progress } = useScroll()
   return (
-    <nav className="nav">
+    <nav className={`nav${scrolled ? ' nav-scrolled' : ''}`}>
       <div className="nav-inner">
         <a className="nav-brand" href="#top" aria-label="Refactor Labs — Andy">
           <span className="nav-logo" aria-hidden="true">RL</span>
@@ -34,6 +37,11 @@ export function Nav() {
           </a>
         </div>
       </div>
+      <div
+        className="nav-progress"
+        aria-hidden="true"
+        style={{ '--scroll-progress': progress } as CSSProperties}
+      />
     </nav>
   )
 }
