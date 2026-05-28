@@ -331,6 +331,46 @@ main {
   color: transparent;
 }
 
+/* Signature detail: a hand-drawn marker stroke that self-draws beneath the
+ * hero's highlighted phrase once the kinetic words settle. The gradient is
+ * painted through an SVG-stroke mask so it stays theme-aware and crisp at any
+ * width. Give the clip box extra descender room so the stroke isn't shaved. */
+.hero-title .kw:has(.hl) {
+  padding-bottom: 0.34em;
+  margin-bottom: -0.34em;
+}
+.hero-title .hl {
+  position: relative;
+}
+.hero-title .hl::after {
+  content: '';
+  position: absolute;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: -0.16em;
+  height: 0.2em;
+  background: var(--gradient);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20220%2014'%20preserveAspectRatio='none'%3E%3Cpath%20d='M3,9C45,3,82,12,120,7S190,4,217,8'%20fill='none'%20stroke='%23000'%20stroke-width='4'%20stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20220%2014'%20preserveAspectRatio='none'%3E%3Cpath%20d='M3,9C45,3,82,12,120,7S190,4,217,8'%20fill='none'%20stroke='%23000'%20stroke-width='4'%20stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  transform-origin: left center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title .hl::after {
+    transform: scaleX(0);
+    /* Start after each highlighted word's kinetic reveal has settled. */
+    animation: underline-draw 0.55s var(--ease-out) calc(var(--i) * 65ms + 1.5s) both;
+  }
+}
+@keyframes underline-draw {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* ─── Buttons ─────────────────────────────────────────────────────────── */
 
 .btn {
@@ -473,9 +513,9 @@ main {
 
 .hero-title {
   font-size: var(--step-5);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  margin: 18px 0 18px;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 20px 0 22px;
   font-weight: 800;
 }
 
@@ -1163,6 +1203,7 @@ dialog.cmdk[open]::backdrop {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  counter-reset: pain;
 }
 @media (max-width: 800px) { .problem-grid { grid-template-columns: 1fr; } }
 
@@ -1172,24 +1213,66 @@ dialog.cmdk[open]::backdrop {
   background: var(--bg-card);
   padding: 24px 22px;
   position: relative;
+  overflow: hidden;
+  counter-increment: pain;
   transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out),
     box-shadow 0.3s var(--ease-out);
 }
 .problem-card:hover {
-  border-color: var(--border-strong);
+  border-color: color-mix(in oklch, var(--accent) 38%, var(--border));
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 16px 38px color-mix(in oklch, var(--accent) 10%, rgba(0, 0, 0, 0.06));
 }
+/* Oversized ghost numeral watermark — reads as editorial structure, not a
+ * second label (the small accent "01" up top still does the labelling). */
+.problem-card::before {
+  content: counter(pain, decimal-leading-zero);
+  position: absolute;
+  top: -0.32em;
+  right: 0.06em;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 132px;
+  line-height: 1;
+  color: color-mix(in oklch, var(--accent) 7%, transparent);
+  pointer-events: none;
+  transition: color 0.35s var(--ease-out), transform 0.5s var(--ease-spring);
+  z-index: 0;
+}
+[data-theme='dark'] .problem-card::before {
+  color: color-mix(in oklch, var(--accent) 11%, transparent);
+}
+.problem-card:hover::before {
+  color: color-mix(in oklch, var(--accent) 16%, transparent);
+  transform: translateY(2px) scale(1.04);
+}
+/* Gradient hairline that draws across the top edge on hover. */
+.problem-card::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: var(--gradient);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-out);
+}
+.problem-card:hover::after { transform: scaleX(1); }
 .problem-card h3 {
   font-size: 19px;
   margin: 8px 0 8px;
   letter-spacing: -0.01em;
+  position: relative;
+  z-index: 1;
 }
 .problem-card p {
   margin: 0;
   color: var(--text-dim);
   font-size: 14.5px;
   line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 .problem-num {
   font-family: var(--font-mono);
@@ -1197,6 +1280,8 @@ dialog.cmdk[open]::backdrop {
   color: var(--accent);
   font-weight: 700;
   letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Artifacts ───────────────────────────────────────────────────────── */
@@ -1394,13 +1479,27 @@ dialog.cmdk[open]::backdrop {
 }
 
 .steps {
+  position: relative;
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: 14px;
 }
+/* Timeline rail behind the cards — opaque card backgrounds mask it everywhere
+ * except the gaps, so it reads as a connector threading the numbered badges. */
+.steps::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 33px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--border-strong), var(--border));
+  z-index: 0;
+}
 .step {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 36px 1fr;
   gap: 14px;
@@ -1408,6 +1507,13 @@ dialog.cmdk[open]::backdrop {
   border-radius: 12px;
   background: var(--bg-card);
   padding: 16px 16px;
+  transition: border-color 0.28s var(--ease-out), transform 0.28s var(--ease-out),
+    box-shadow 0.28s var(--ease-out);
+}
+.step:hover {
+  border-color: color-mix(in oklch, var(--accent) 35%, var(--border));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 .step-num {
   width: 36px;
@@ -1421,6 +1527,12 @@ dialog.cmdk[open]::backdrop {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--accent) 24%, transparent);
+  transition: transform 0.35s var(--ease-spring), box-shadow 0.3s var(--ease-out);
+}
+.step:hover .step-num {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 8px 20px color-mix(in oklch, var(--accent) 45%, transparent);
 }
 .step h3 { margin: 2px 0 4px; font-size: 16px; letter-spacing: -0.01em; }
 .step p { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
@@ -1546,6 +1658,100 @@ dialog.cmdk[open]::backdrop {
   padding: 28px 0;
   margin-top: 32px;
   background: color-mix(in oklch, var(--bg-soft) 60%, transparent);
+}
+
+/* ── Closing CTA band ─────────────────────────────────────────────────────
+ * The page's final, confident conversion moment: a gradient panel with a
+ * slowly rotating conic border (shares the registered --bd-angle with the
+ * hero card) and a giant ghost wordmark anchoring it. */
+.footer-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 8px 0 44px;
+  padding: clamp(2.5rem, 1.6rem + 4vw, 4.75rem) clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  background:
+    radial-gradient(130% 150% at 50% -10%, var(--gradient-soft), transparent 62%),
+    var(--bg-card);
+  box-shadow: var(--shadow-md);
+}
+/* Oversized brand wordmark bleeding off the bottom edge. */
+.footer-cta-mark {
+  position: absolute;
+  left: 50%;
+  bottom: -0.34em;
+  transform: translateX(-50%);
+  z-index: -1;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: clamp(116px, 27vw, 340px);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  color: color-mix(in oklch, var(--accent) 6%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+[data-theme='dark'] .footer-cta-mark {
+  color: color-mix(in oklch, var(--accent) 9%, transparent);
+}
+/* Border-only conic ring via the mask-composite trick. */
+.footer-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--bd-angle, 0deg),
+    transparent 55%,
+    color-mix(in oklch, var(--accent) 72%, transparent),
+    color-mix(in oklch, var(--accent-2) 82%, transparent),
+    transparent 98%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.6;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .footer-cta::after {
+    animation: bd-spin 9s linear infinite;
+  }
+}
+.footer-cta-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.footer-cta-inner h2 {
+  font-size: var(--step-4);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  margin: 12px 0 0;
+  max-width: 18ch;
+}
+.footer-cta-sub {
+  margin: 14px 0 26px;
+  max-width: 52ch;
+  color: var(--text-dim);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+.footer-cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .footer-inner {
   display: flex;
@@ -1990,6 +2196,7 @@ dialog.cmdk[open]::backdrop {
   gap: 10px;
 }
 .faq-row {
+  position: relative;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-card);
@@ -2000,8 +2207,21 @@ dialog.cmdk[open]::backdrop {
   border-color: color-mix(in oklch, var(--accent) 40%, var(--border));
   box-shadow: 0 8px 24px color-mix(in oklch, var(--accent) 10%, transparent);
 }
-.faq-item {
-  /* Reset the UA disclosure marker; we draw our own chevron. */
+/* Accent rail that grows down the left edge when a row opens. */
+.faq-row::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: var(--gradient);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.35s var(--ease-out);
+  z-index: 1;
+}
+.faq-row:has(.faq-item[open])::before {
+  transform: scaleY(1);
 }
 .faq-item summary {
   list-style: none;
@@ -2015,18 +2235,22 @@ dialog.cmdk[open]::backdrop {
   font-weight: 600;
   color: var(--text);
   user-select: none;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-item summary:hover { background: var(--bg-soft); }
+.faq-item summary:hover .faq-chevron { color: var(--accent); }
+.faq-item[open] summary { color: var(--accent); }
 .faq-chevron {
+  flex: none;
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   color: var(--text-dim);
-  transition: transform 0.25s var(--ease-out), color 0.25s var(--ease-out);
+  transition: transform 0.35s var(--ease-spring), color 0.25s var(--ease-out);
 }
 .faq-item[open] .faq-chevron {
-  transform: rotate(45deg);
+  transform: rotate(135deg);
   color: var(--accent);
 }
 .faq-a {
@@ -2034,6 +2258,46 @@ dialog.cmdk[open]::backdrop {
   color: var(--text-dim);
   font-size: 14.5px;
   line-height: 1.6;
+}
+.faq-more {
+  max-width: 760px;
+  margin: 22px auto 0;
+  text-align: center;
+  font-size: 14.5px;
+  color: var(--text-dim);
+}
+.faq-more a {
+  font-weight: 600;
+}
+
+/* Smooth open/close — animate the disclosed content's height from 0 to its
+ * intrinsic size. Pure CSS via `::details-content` + `interpolate-size`
+ * (Chromium 2024+); unsupported browsers fall back to the instant native
+ * toggle. Gated behind reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+    .faq-item::details-content {
+      height: 0;
+      overflow: clip;
+      opacity: 0;
+      transition: height 0.36s var(--ease-out), opacity 0.3s var(--ease-out),
+        content-visibility 0.36s allow-discrete;
+    }
+    .faq-item[open]::details-content {
+      height: auto;
+      opacity: 1;
+    }
+    .faq-a {
+      transform: translateY(-6px);
+      transition: transform 0.36s var(--ease-out);
+    }
+    .faq-item[open] .faq-a {
+      transform: none;
+    }
+  }
 }
 
 /* ─── Contact ─────────────────────────────────────────────────────────── */
@@ -2063,6 +2327,7 @@ dialog.cmdk[open]::backdrop {
   background: var(--bg-card);
   color: var(--text);
   text-decoration: none;
+  isolation: isolate;
   transition:
     transform 0.28s var(--ease-spring),
     border-color 0.25s var(--ease-out),
@@ -2094,6 +2359,26 @@ dialog.cmdk[open]::backdrop {
   opacity: 1;
 }
 .contact-card:hover::before { opacity: 1; }
+/* Cursor-tracking spotlight — sits above the card fill but behind the content
+ * (isolation + negative z-index). Origin set per-pointer in Contact.tsx. */
+.contact-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklch, var(--accent) 16%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .contact-card:hover::after { opacity: 1; }
+}
 
 .contact-card-primary {
   background:

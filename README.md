@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://refactorlab.github.io/andy/">
-    <img src="./docs/banner.svg" alt="andy — the PR review that explains what actually changed" width="100%" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/banner.svg" alt="andy — the PR review that explains what actually changed" width="100%" />
   </a>
 </p>
 
@@ -34,8 +34,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/hero-dark.png" />
-    <img src="./docs/screenshots/hero-light.png" alt="The Andy landing page — kinetic headline, live preview card with a radial PR-health gauge and animated impact bars" width="1080" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/hero-dark.png" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/hero-light.png" alt="The Andy landing page — kinetic headline, live preview card with a radial PR-health gauge and animated impact bars" width="1080" />
   </picture>
 </p>
 
@@ -116,8 +116,8 @@ Then open a PR — Andy auto-detects the latest profiler release, caches it via 
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/install-dark.png" />
-    <img src="./docs/screenshots/install-light.png" alt="Install section — syntax-highlighted YAML on the left with a Copy button, three setup steps on the right" width="1080" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/install-dark.png" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/install-light.png" alt="Install section — syntax-highlighted YAML on the left with a Copy button, three setup steps on the right" width="1080" />
   </picture>
 </p>
 
@@ -125,7 +125,7 @@ Then open a PR — Andy auto-detects the latest profiler release, caches it via 
 <summary>👉 <strong>The YAML, close up</strong></summary>
 
 <p align="center">
-  <img src="./docs/screenshots/yaml-block.png" alt="The workflow YAML with live syntax highlighting and a typing caret — keys in accent orange, values in green, numbers in blue" width="640" />
+  <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/yaml-block.png" alt="The workflow YAML with live syntax highlighting and a typing caret — keys in accent orange, values in green, numbers in blue" width="640" />
 </p>
 
 </details>
@@ -155,8 +155,8 @@ One sticky comment per pull request, re-rendered on every push. Inside it: the v
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/bento-dark.png" />
-    <img src="./docs/screenshots/bento-light.png" alt="Six artifacts arranged as a bento grid: featured Architecture map, then Value card / Ranked suggestions stacked on the right, with Risk quadrant / Hot-touch mindmap / Business context across the bottom" width="1080" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/bento-dark.png" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/bento-light.png" alt="Six artifacts arranged as a bento grid: featured Architecture map, then Value card / Ranked suggestions stacked on the right, with Risk quadrant / Hot-touch mindmap / Business context across the bottom" width="1080" />
   </picture>
 </p>
 
@@ -177,8 +177,8 @@ Two artifacts from a real review on a 100-file PR — the value card, a ranked p
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/example-dark.png" />
-    <img src="./docs/screenshots/example-light.png" alt="A real Andy review showing a value card with animated impact bars, a ranked suggestion with a code diff, and a self-drawing architecture map fanning out from PR to four artifacts" width="1080" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/example-dark.png" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/example-light.png" alt="A real Andy review showing a value card with animated impact bars, a ranked suggestion with a code diff, and a self-drawing architecture map fanning out from PR to four artifacts" width="1080" />
   </picture>
 </p>
 
@@ -188,14 +188,14 @@ Two artifacts from a real review on a 100-file PR — the value card, a ranked p
 
 #### The preview card
 
-<img src="./docs/screenshots/hero-card.png" alt="The PR preview card — bot identity, radial PR-health gauge at 8.4/10, finding pills (5 features, 3 risks, 12 tests), and impact bars (Money +32, Customer +48, Runtime +60, UX +25)" />
+<img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/hero-card.png" alt="The PR preview card — bot identity, radial PR-health gauge at 8.4/10, finding pills (5 features, 3 risks, 12 tests), and impact bars (Money +32, Customer +48, Runtime +60, UX +25)" />
 
 </td>
 <td width="50%" valign="top">
 
 #### The architecture map
 
-<img src="./docs/screenshots/arch-diagram.png" alt="Self-drawing architecture map — connector paths stroke on from a PR node through an Andy hub, fanning out to four artifact nodes" />
+<img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/arch-diagram.png" alt="Self-drawing architecture map — connector paths stroke on from a PR node through an Andy hub, fanning out to four artifact nodes" />
 
 </td>
 </tr>
@@ -210,7 +210,7 @@ Two artifacts from a real review on a 100-file PR — the value card, a ranked p
 This is exactly what reviewers see when Andy lands on a real pull request (`refactorlab/drift#36`) — the sticky comment with a live architecture flow, weighted scores, and grouped findings:
 
 <p align="center">
-  <img src="./docs/screenshots/comment.png" alt="Andy's sticky comment as rendered on a real GitHub pull request, showing the automated PR review header, architecture flow, 8/10 score, business logic section, and listed findings" width="720" />
+  <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/comment.png" alt="Andy's sticky comment as rendered on a real GitHub pull request, showing the automated PR review header, architecture flow, 8/10 score, business logic section, and listed findings" width="720" />
 </p>
 
 ---
@@ -286,8 +286,8 @@ Press **⌘K / Ctrl+K** anywhere on the page to open the command palette — fuz
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/palette-dark.png" />
-    <img src="./docs/screenshots/palette-light.png" alt="The ⌘K command palette open over the landing page — Jump To (Problem, What you get, Install, Example) and Actions (Install from Marketplace, See an example review, View source on GitHub, Toggle theme, Toggle performance HUD)" width="900" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/palette-dark.png" />
+    <img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/palette-light.png" alt="The ⌘K command palette open over the landing page — Jump To (Problem, What you get, Install, Example) and Actions (Install from Marketplace, See an example review, View source on GitHub, Toggle theme, Toggle performance HUD)" width="900" />
   </picture>
 </p>
 

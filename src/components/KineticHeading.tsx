@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { Fragment, type CSSProperties } from 'react'
 
 export interface HeadingWord {
   text: string
@@ -21,15 +21,20 @@ export function KineticHeading({ words, className = '' }: KineticHeadingProps) {
   return (
     <h1 className={`kinetic-heading ${className}`}>
       {words.map((word, i) => (
-        <span className="kw" key={`${word.text}-${i}`}>
-          <span
-            className={`kw-inner${word.highlight ? ' hl' : ''}`}
-            style={{ '--i': i } as CSSProperties}
-          >
-            {word.text}
+        // The inter-word space sits *between* the clipped `.kw` boxes — never
+        // inside one, or `overflow: hidden` on the inline-block swallows it and
+        // the words collapse together.
+        <Fragment key={`${word.text}-${i}`}>
+          <span className="kw">
+            <span
+              className={`kw-inner${word.highlight ? ' hl' : ''}`}
+              style={{ '--i': i } as CSSProperties}
+            >
+              {word.text}
+            </span>
           </span>
           {i < words.length - 1 ? ' ' : ''}
-        </span>
+        </Fragment>
       ))}
     </h1>
   )

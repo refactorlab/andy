@@ -1,7 +1,16 @@
+import type { MouseEvent } from 'react'
 import { ScrambleText } from './ScrambleText'
 
 const CALENDLY = 'https://calendly.com/schuldi/30mins'
 const EMAIL = 'schuldi@gmail.com'
+
+/** Tracks the cursor as CSS vars so the card's spotlight follows the pointer. */
+function spotlight(e: MouseEvent<HTMLElement>) {
+  const el = e.currentTarget
+  const r = el.getBoundingClientRect()
+  el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`)
+  el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`)
+}
 
 export function Contact() {
   return (
@@ -23,6 +32,7 @@ export function Contact() {
             target="_blank"
             rel="noopener noreferrer"
             data-magnetic
+            onMouseMove={spotlight}
           >
             <span className="contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -44,6 +54,7 @@ export function Contact() {
             className="contact-card"
             href={`mailto:${EMAIL}?subject=Andy%20%E2%80%94%20hello`}
             data-magnetic
+            onMouseMove={spotlight}
           >
             <span className="contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

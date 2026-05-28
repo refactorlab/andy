@@ -55,6 +55,9 @@ export function Faq() {
             </li>
           ))}
         </ul>
+        <p className="faq-more" data-reveal>
+          Still have a question? <a href="#contact">Talk to us →</a>
+        </p>
       </div>
     </section>
   )
