@@ -13,7 +13,8 @@ export function Footer() {
           <a href="https://github.com/marketplace/actions/andy-pr-handoff-by-drift" target="_blank" rel="noopener noreferrer">Marketplace</a>
           <a href="https://github.com/refactorlab/andy/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
           <a href="https://github.com/refactorlab/andy/issues" target="_blank" rel="noopener noreferrer">Issues</a>
-          <a href="mailto:schuldi@gmail.com">Contact</a>
+          <a href="#contact">Contact</a>
+          <a href="https://calendly.com/schuldi/30mins" target="_blank" rel="noopener noreferrer">Book a meeting</a>
         </nav>
 
         <div className="footer-meta">

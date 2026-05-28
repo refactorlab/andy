@@ -6,6 +6,8 @@ import { Problem } from './components/Problem'
 import { Artifacts } from './components/Artifacts'
 import { Install } from './components/Install'
 import { Example } from './components/Example'
+import { Faq } from './components/Faq'
+import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { SafeBoundary } from './components/SafeBoundary'
 import { useScrollReveal } from './lib/useScrollReveal'
@@ -71,6 +73,8 @@ export default function App() {
         </Deferred>
         <Install />
         <Example />
+        <Faq />
+        <Contact />
       </main>
       <Footer />
     </div>

@@ -6,6 +6,7 @@ const SECTIONS = [
   { id: 'what', label: 'What you get' },
   { id: 'install', label: 'Install' },
   { id: 'example', label: 'Example' },
+  { id: 'faq', label: 'FAQ' },
 ]
 
 const IDS = SECTIONS.map((s) => s.id)

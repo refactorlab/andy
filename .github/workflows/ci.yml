@@ -1,6 +1,6 @@
 name: CI
 
-# Validates that the landing page type-checks and builds on every PR,
+# Validates that the landing page type-checks, tests, and builds on every PR,
 # before changes reach main and trigger the Pages deploy (deploy.yml).
 on:
   pull_request:
@@ -31,5 +31,29 @@ jobs:
       - name: Type-check
         run: bun run typecheck
 
+      - name: Test
+        run: bun test
+
       - name: Build
         run: bun run build
+
+      - name: Bundle-size budget
+        # Guards the code-split win: fail if the initial JS / CSS gzipped sizes
+        # blow past their budgets. Tune the limits as the page legitimately grows.
+        run: |
+          set -euo pipefail
+          gz() { gzip -c "$1" | wc -c | tr -d ' '; }
+          JS=$(ls dist/assets/index-*.js | head -n1)
+          CSS=$(ls dist/assets/index-*.css | head -n1)
+          JS_GZ=$(gz "$JS")
+          CSS_GZ=$(gz "$CSS")
+          JS_BUDGET=82000   # ~80 KB gz — initial JS (decorative components are lazy)
+          CSS_BUDGET=11000  # ~11 KB gz
+          echo "Initial JS  gzip: ${JS_GZ}  / budget ${JS_BUDGET}"
+          echo "Initial CSS gzip: ${CSS_GZ} / budget ${CSS_BUDGET}"
+          if [ "$JS_GZ" -gt "$JS_BUDGET" ]; then
+            echo "::error file=$JS::Initial JS gzip ${JS_GZ} > budget ${JS_BUDGET}"; exit 1
+          fi
+          if [ "$CSS_GZ" -gt "$CSS_BUDGET" ]; then
+            echo "::error file=$CSS::Initial CSS gzip ${CSS_GZ} > budget ${CSS_BUDGET}"; exit 1
+          fi

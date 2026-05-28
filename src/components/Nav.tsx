@@ -9,6 +9,8 @@ const NAV_LINKS = [
   { id: 'what', label: 'What you get' },
   { id: 'install', label: 'Install' },
   { id: 'example', label: 'Example' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'contact', label: 'Contact' },
 ]
 
 const SECTION_IDS = NAV_LINKS.map((link) => link.id)

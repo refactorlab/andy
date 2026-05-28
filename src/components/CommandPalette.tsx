@@ -4,6 +4,7 @@ import { toggleTheme } from '../lib/theme'
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 const REPO = 'https://github.com/refactorlab/andy'
 const EXAMPLE = './pr36-github-ui_2.html'
+const CALENDLY = 'https://calendly.com/schuldi/30mins'
 
 interface Command {
   id: string
@@ -26,8 +27,11 @@ const COMMANDS: Command[] = [
   { id: 'go-what', label: 'What you get', hint: 'The six artifacts', group: 'Jump to', run: () => scrollTo('what') },
   { id: 'go-install', label: 'Install', hint: 'One YAML file', group: 'Jump to', run: () => scrollTo('install') },
   { id: 'go-example', label: 'Example', hint: 'A real review', group: 'Jump to', run: () => scrollTo('example') },
+  { id: 'go-faq', label: 'FAQ', hint: 'Common questions', group: 'Jump to', run: () => scrollTo('faq') },
+  { id: 'go-contact', label: 'Contact', hint: 'Email or book a meeting', group: 'Jump to', run: () => scrollTo('contact') },
   { id: 'a-install', label: 'Install from Marketplace', hint: 'Open GitHub Marketplace', group: 'Actions', run: () => openUrl(MARKETPLACE) },
   { id: 'a-example', label: 'See an example review', hint: 'Open the full PR comment', group: 'Actions', run: () => openUrl(EXAMPLE) },
+  { id: 'a-calendly', label: 'Book a 30-min meeting', hint: 'Open Calendly', group: 'Actions', run: () => openUrl(CALENDLY) },
   { id: 'a-github', label: 'View source on GitHub', hint: 'refactorlab/andy', group: 'Actions', run: () => openUrl(REPO) },
   { id: 'a-theme', label: 'Toggle theme', hint: 'Switch light / dark', group: 'Actions', run: () => toggleTheme() },
   { id: 'a-perf', label: 'Toggle performance HUD', hint: 'Live FPS + Web Vitals', group: 'Actions', run: () => window.dispatchEvent(new Event('toggle-perf-hud')) },
