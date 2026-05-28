@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" width="1440" height="320" role="img" aria-label="andy — the PR review that explains what actually changed">
+  <defs>
+    <linearGradient id="g-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff6b3d"/>
+      <stop offset="55%" stop-color="#ff9558"/>
+      <stop offset="100%" stop-color="#ffb547"/>
+    </linearGradient>
+    <radialGradient id="g-vignette" cx="0.75" cy="0.5" r="0.85">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.18"/>
+    </radialGradient>
+    <linearGradient id="g-andy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff6b3d"/>
+      <stop offset="100%" stop-color="#ffb547"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1440" height="320" fill="url(#g-bg)"/>
+  <rect width="1440" height="320" fill="url(#g-vignette)"/>
+
+  <!-- left: brand block -->
+  <g transform="translate(80, 80)" font-family="-apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif">
+    <text x="0" y="0" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" letter-spacing="3" fill="#fff" opacity="0.85">REFACTOR&#160;LABS &#160;·&#160; GITHUB&#160;ACTION</text>
+    <text x="0" y="98" font-size="120" font-weight="900" fill="#fff" letter-spacing="-4">andy</text>
+    <text x="0" y="156" font-size="28" font-weight="600" fill="#fff" opacity="0.95">The PR review that explains <tspan font-style="italic">what actually changed</tspan>.</text>
+    <text x="0" y="198" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#fff" opacity="0.78">~30s per PR &#160;·&#160; $0 service cost &#160;·&#160; 1 YAML file to install</text>
+  </g>
+
+  <!-- right: schematic — PR → Andy → 4 artifacts (echoes the in-product arch diagram) -->
+  <g transform="translate(940, 78)" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace">
+
+    <!-- connectors (drawn first so nodes sit on top) -->
+    <g stroke="#fff" stroke-opacity="0.55" stroke-width="1.4" fill="none">
+      <path d="M80 80 L160 80"/>
+      <path d="M256 80 C300 64, 318 14, 352 14"/>
+      <path d="M256 80 C300 76, 318 60, 352 60"/>
+      <path d="M256 80 C300 88, 318 104, 352 104"/>
+      <path d="M256 80 C300 110, 318 150, 352 150"/>
+    </g>
+
+    <!-- PR node -->
+    <g>
+      <rect x="0" y="60" width="80" height="40" rx="9" fill="#fff" fill-opacity="0.14" stroke="#fff" stroke-opacity="0.55" stroke-width="1.2"/>
+      <text x="40" y="86" text-anchor="middle" font-size="12" fill="#fff" opacity="0.95">PR&#160;·&#160;100</text>
+    </g>
+
+    <!-- Andy node (filled) -->
+    <g>
+      <rect x="160" y="56" width="96" height="48" rx="12" fill="#fff"/>
+      <text x="208" y="88" text-anchor="middle" font-family="-apple-system, 'Inter', sans-serif" font-size="20" font-weight="800" fill="url(#g-andy)" letter-spacing="-0.5">andy</text>
+    </g>
+
+    <!-- 4 artifact nodes -->
+    <g font-size="11.5" fill="#fff" opacity="0.95">
+      <g>
+        <rect x="352" y="0" width="170" height="28" rx="7" fill="#fff" fill-opacity="0.13" stroke="#fff" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="370" cy="14" r="3.5" fill="#ff6b3d"/>
+        <text x="386" y="18">Architecture map</text>
+      </g>
+      <g>
+        <rect x="352" y="46" width="170" height="28" rx="7" fill="#fff" fill-opacity="0.13" stroke="#fff" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="370" cy="60" r="3.5" fill="#16a34a"/>
+        <text x="386" y="64">Value card</text>
+      </g>
+      <g>
+        <rect x="352" y="90" width="170" height="28" rx="7" fill="#fff" fill-opacity="0.13" stroke="#fff" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="370" cy="104" r="3.5" fill="#dc2626"/>
+        <text x="386" y="108">Risk quadrant</text>
+      </g>
+      <g>
+        <rect x="352" y="136" width="170" height="28" rx="7" fill="#fff" fill-opacity="0.13" stroke="#fff" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="370" cy="150" r="3.5" fill="#1d4ed8"/>
+        <text x="386" y="154">Ranked suggestions</text>
+      </g>
+    </g>
+  </g>
+</svg>

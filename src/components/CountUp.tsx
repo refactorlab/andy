@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface CountUpProps {
   value: number
@@ -11,6 +11,15 @@ interface CountUpProps {
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
 
+/** Locale-aware formatter — en-US sees "8.4", fr-FR sees "8,4", de-DE "8,4". */
+function getFormatter(decimals: number) {
+  const locale = typeof navigator !== 'undefined' ? navigator.language : 'en-US'
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
+}
+
 /**
  * Counts from 0 → `value` the first time it scrolls into view. Self-observing,
  * so it works anywhere on the page; jumps straight to the final value under
@@ -19,6 +28,7 @@ const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
 export function CountUp({ value, decimals = 0, prefix = '', suffix = '', duration = 1400 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const [display, setDisplay] = useState(0)
+  const formatter = useMemo(() => getFormatter(decimals), [decimals])
 
   useEffect(() => {
     const el = ref.current
@@ -67,10 +77,10 @@ export function CountUp({ value, decimals = 0, prefix = '', suffix = '', duratio
     <>
       <span ref={ref} aria-hidden="true" style={{ fontVariantNumeric: 'tabular-nums' }}>
         {prefix}
-        {display.toFixed(decimals)}
+        {formatter.format(display)}
         {suffix}
       </span>
-      <span className="sr-only">{prefix}{value.toFixed(decimals)}{suffix}</span>
+      <span className="sr-only">{prefix}{formatter.format(value)}{suffix}</span>
     </>
   )
 }
