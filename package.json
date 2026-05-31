@@ -6,12 +6,14 @@
   "description": "Landing page for Andy — PR Handoff Assistant by Drift",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && bun scripts/prerender.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "bun test"
   },
   "dependencies": {
+    "preact": "^10.29.2",
+    "preact-render-to-string": "^6.7.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

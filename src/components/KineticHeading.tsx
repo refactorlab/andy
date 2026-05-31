@@ -11,19 +11,14 @@ interface KineticHeadingProps {
 }
 
 /**
- * Splits a headline into words and reveals each one with a clip-masked
- * slide-up + 3D rotate + blur-sharpen, staggered via `--i`. Each word is its
- * own overflow-clipped box so the motion reads as type "settling" into place.
- * Reduced-motion users see it static (the animated baseline is gated in CSS).
- * The full text stays selectable/legible — we only split on spaces.
+ * Per-word slide-up reveal driven by a CSS keyframe + staggered via `--i`.
+ * Each word is its own overflow-clipped box so motion reads as type
+ * "settling" into place. Reduced motion → static (rule gated in CSS).
  */
 export function KineticHeading({ words, className = '' }: KineticHeadingProps) {
   return (
     <h1 className={`kinetic-heading ${className}`}>
       {words.map((word, i) => (
-        // The inter-word space sits *between* the clipped `.kw` boxes — never
-        // inside one, or `overflow: hidden` on the inline-block swallows it and
-        // the words collapse together.
         <Fragment key={`${word.text}-${i}`}>
           <span className="kw">
             <span

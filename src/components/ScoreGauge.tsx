@@ -15,7 +15,11 @@ interface ScoreGaugeProps {
  */
 export function ScoreGauge({ value, max = 10, size = 80, stroke = 7 }: ScoreGaugeProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
+  // SSR renders the arc *complete* (shown=true) so users without JS see the
+  // correct gauge value, and hydration matches the server markup exactly.
+  // On the client we briefly snap back to empty in useLayoutEffect, then the
+  // CSS transition draws the arc back to full as the element enters view.
+  const [shown, setShown] = useState(true)
 
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
@@ -30,11 +34,16 @@ export function ScoreGauge({ value, max = 10, size = 80, stroke = 7 }: ScoreGaug
       setShown(true)
       return
     }
+    // Reset to empty so the entrance sweep can play. The reset happens before
+    // the next paint via rAF — there's no flash of the "complete" SSR state.
+    let started = false
+    setShown(false)
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setShown(true)
+          if (entry.isIntersecting && !started) {
+            started = true
+            requestAnimationFrame(() => setShown(true))
             io.disconnect()
           }
         }

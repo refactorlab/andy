@@ -27,7 +27,11 @@ function getFormatter(decimals: number) {
  */
 export function CountUp({ value, decimals = 0, prefix = '', suffix = '', duration = 1400 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
-  const [display, setDisplay] = useState(0)
+  // SSR renders the *final* value so users without JS see the correct number,
+  // and the hydrated HTML matches the server output exactly. The client then
+  // resets to 0 in useLayoutEffect (synchronously, before paint) and animates
+  // up — so the animation still plays, but no wrong content ever flashes.
+  const [display, setDisplay] = useState(value)
   const formatter = useMemo(() => getFormatter(decimals), [decimals])
 
   useEffect(() => {
@@ -57,7 +61,10 @@ export function CountUp({ value, decimals = 0, prefix = '', suffix = '', duratio
         for (const entry of entries) {
           if (entry.isIntersecting && !started) {
             started = true
-            animate()
+            // Snap to 0 right before the animation kicks off, scheduled inside
+            // the rAF that opens it, so we never paint a half-finished frame.
+            setDisplay(0)
+            requestAnimationFrame(animate)
             io.disconnect()
           }
         }

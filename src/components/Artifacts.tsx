@@ -1,5 +1,5 @@
 import { TiltCard } from './TiltCard'
-import { ScrambleText } from './ScrambleText'
+import { FeaturedDiagram } from './FeaturedDiagram'
 
 const items = [
   {
@@ -7,6 +7,7 @@ const items = [
     title: 'Architecture map',
     body: 'Before → after diagrams of what your PR changed, plus the data structures connecting the two. Rendered as Mermaid.',
     tags: ['mermaid', 'before/after', 'symbols'],
+    featured: true,
   },
   {
     icon: '📊',
@@ -45,7 +46,7 @@ export function Artifacts() {
     <section className="section" id="what">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <ScrambleText className="kicker" text="// what andy ships in every review" />
+          <span className="kicker">// what andy ships in every review</span>
           <h2>Six artifacts. <span className="hl">One PR comment.</span></h2>
           <p className="section-lede">
             One sticky comment per pull request, re-rendered on every push.
@@ -57,8 +58,13 @@ export function Artifacts() {
 
         <div className="artifact-grid">
           {items.map((it, i) => (
-            <TiltCard className="artifact" key={it.title} revealDelay={(i % 3) * 0.08} maxTilt={5}>
+            <TiltCard
+              key={it.title}
+              className={`artifact${it.featured ? ' artifact-featured' : ''}`}
+              revealDelay={(i % 3) * 0.08}
+            >
               <div className="artifact-icon" aria-hidden="true">{it.icon}</div>
+              {it.featured ? <span className="artifact-flag">Featured</span> : null}
               <h3>{it.title}</h3>
               <p>{it.body}</p>
               <div className="artifact-tags">
@@ -66,6 +72,7 @@ export function Artifacts() {
                   <span className="tagchip" key={t}>{t}</span>
                 ))}
               </div>
+              {it.featured ? <FeaturedDiagram /> : null}
             </TiltCard>
           ))}
         </div>

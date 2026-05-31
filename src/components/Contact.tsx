@@ -1,23 +1,12 @@
-import type { MouseEvent } from 'react'
-import { ScrambleText } from './ScrambleText'
-
 const CALENDLY = 'https://calendly.com/schuldi/30mins'
 const EMAIL = 'schuldi@gmail.com'
-
-/** Tracks the cursor as CSS vars so the card's spotlight follows the pointer. */
-function spotlight(e: MouseEvent<HTMLElement>) {
-  const el = e.currentTarget
-  const r = el.getBoundingClientRect()
-  el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`)
-  el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`)
-}
 
 export function Contact() {
   return (
     <section className="section section-tight" id="contact">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <ScrambleText className="kicker" text="// get in touch" />
+          <span className="kicker">// get in touch</span>
           <h2>Questions, integrations, or a quick demo?</h2>
           <p className="section-lede">
             Drop a line or grab a slot — we usually reply within a day and the
@@ -26,14 +15,7 @@ export function Contact() {
         </header>
 
         <div className="contact-grid" data-reveal-stagger>
-          <a
-            className="contact-card contact-card-primary"
-            href={CALENDLY}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-magnetic
-            onMouseMove={spotlight}
-          >
+          <a className="contact-card contact-card-primary" href={CALENDLY} target="_blank" rel="noopener noreferrer">
             <span className="contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -50,12 +32,7 @@ export function Contact() {
             <span className="contact-cta" aria-hidden="true">calendly.com/schuldi →</span>
           </a>
 
-          <a
-            className="contact-card"
-            href={`mailto:${EMAIL}?subject=Andy%20%E2%80%94%20hello`}
-            data-magnetic
-            onMouseMove={spotlight}
-          >
+          <a className="contact-card" href={`mailto:${EMAIL}?subject=Andy%20%E2%80%94%20hello`}>
             <span className="contact-icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="5" width="18" height="14" rx="2" />

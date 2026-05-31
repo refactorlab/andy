@@ -1,8 +1,15 @@
-import type { CSSProperties } from 'react'
+import { useEffect, useRef } from 'react'
 import { ThemeToggle } from './ThemeToggle'
-import { useScroll } from '../lib/useScroll'
 import { useScrollSpy } from '../lib/useScrollSpy'
 import { isMac } from '../lib/platform'
+
+// Cached so repeated hovers don't re-import. Vite returns the same Promise on
+// subsequent calls anyway, but this saves the import-graph lookup.
+let palettePrefetch: Promise<unknown> | null = null
+function prefetchPalette() {
+  if (palettePrefetch) return
+  palettePrefetch = import('./CommandPalette')
+}
 
 const NAV_LINKS = [
   { id: 'problem', label: 'Problem' },
@@ -15,11 +22,28 @@ const NAV_LINKS = [
 
 const SECTION_IDS = NAV_LINKS.map((link) => link.id)
 
+/**
+ * The nav's elevation state and the reading-progress bar are driven entirely
+ * by native CSS scroll-driven animations (see `.nav` and `.nav-progress` in
+ * App.css). No scroll listener, no React re-render per frame, no JS work
+ * during scroll — the whole thing runs on the compositor.
+ *
+ * Section-spy is the only JS, and it's a one-shot IntersectionObserver. The
+ * mobile sheet is a native `<dialog>` so there's no open-state in React.
+ */
 export function Nav() {
-  const { scrolled, progress } = useScroll()
   const active = useScrollSpy(SECTION_IDS)
+  const sheetRef = useRef<HTMLDialogElement>(null)
+
+  // Close the sheet on hash change (an in-page nav click).
+  useEffect(() => {
+    const onHash = () => sheetRef.current?.close()
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
   return (
-    <nav className={`nav${scrolled ? ' nav-scrolled' : ''}`}>
+    <nav className="nav">
       <div className="nav-inner">
         <a className="nav-brand" href="#top" aria-label="Refactor Labs — Andy">
           <span className="nav-logo" aria-hidden="true">RL</span>
@@ -46,6 +70,10 @@ export function Nav() {
             type="button"
             className="nav-cmdk"
             onClick={() => window.dispatchEvent(new Event('open-command-palette'))}
+            // Hover/focus is a strong signal the user is about to invoke the
+            // palette — start the chunk download now so the click is instant.
+            onPointerEnter={prefetchPalette}
+            onFocus={prefetchPalette}
             aria-label="Open command palette"
             title="Command palette"
           >
@@ -68,13 +96,45 @@ export function Nav() {
             </svg>
             <span>GitHub</span>
           </a>
+
+          <button
+            type="button"
+            className="nav-menu-btn"
+            onClick={() => sheetRef.current?.showModal()}
+            aria-label="Open sections menu"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
       </div>
-      <div
-        className="nav-progress"
-        aria-hidden="true"
-        style={{ '--scroll-progress': progress } as CSSProperties}
-      />
+      <div className="nav-progress" aria-hidden="true" />
+
+      <dialog ref={sheetRef} className="nav-sheet" aria-label="Sections menu">
+        <div className="nav-sheet-head">
+          <strong>Sections</strong>
+          <button
+            type="button"
+            className="nav-sheet-close"
+            onClick={() => sheetRef.current?.close()}
+            aria-label="Close menu"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <ul className="nav-sheet-list">
+          {NAV_LINKS.map((link) => (
+            <li key={link.id}>
+              <a href={`#${link.id}`} onClick={() => sheetRef.current?.close()}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </dialog>
     </nav>
   )
 }

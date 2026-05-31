@@ -10,7 +10,21 @@ const STORAGE_KEY = 'andy-theme'
 const EVENT = 'andy-themechange'
 
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => unknown
+  startViewTransition?: (
+    callback: (() => void) | { update: () => void; types?: string[] },
+  ) => unknown
+}
+
+/** True where View Transition *types* are supported (Chromium 125+, Safari
+ * 18.2+) — the same baseline that gates cross-document navigation transitions.
+ * When true we tag the theme swap with the `theme` type so its circle-reveal
+ * CSS stays scoped to theme changes and off navigations. */
+function supportsViewTransitionTypes(): boolean {
+  return (
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('selector(:active-view-transition-type(theme))')
+  )
 }
 
 export function getInitialTheme(): Theme {
@@ -64,7 +78,13 @@ export function setTheme(next: Theme, origin?: Origin) {
     root.style.setProperty('--vt-x', `${x}px`)
     root.style.setProperty('--vt-y', `${y}px`)
     root.style.setProperty('--vt-r', `${radius}px`)
-    doc.startViewTransition(commit)
+    // Tag with the `theme` type where supported so the circle-reveal CSS stays
+    // scoped to theme swaps (and off the cross-document navigation transition).
+    if (supportsViewTransitionTypes()) {
+      doc.startViewTransition({ update: commit, types: ['theme'] })
+    } else {
+      doc.startViewTransition(commit)
+    }
   } else {
     commit()
   }

@@ -151,6 +151,7 @@ export function CommandPalette() {
           ref={inputRef}
           className="cmdk-input"
           type="text"
+          aria-label="Search sections and commands"
           placeholder="Jump to a section or run a command…"
           value={query}
           onChange={(e) => {

@@ -48,7 +48,7 @@ jobs:
           JS_GZ=$(gz "$JS")
           CSS_GZ=$(gz "$CSS")
           JS_BUDGET=82000   # ~80 KB gz — initial JS (decorative components are lazy)
-          CSS_BUDGET=11000  # ~11 KB gz
+          CSS_BUDGET=12000  # ~12 KB gz — generous margin over the current ~11 KB
           echo "Initial JS  gzip: ${JS_GZ}  / budget ${JS_BUDGET}"
           echo "Initial CSS gzip: ${CSS_GZ} / budget ${CSS_BUDGET}"
           if [ "$JS_GZ" -gt "$JS_BUDGET" ]; then

@@ -1,22 +1,33 @@
 import { useEffect } from 'react'
 
 /**
- * Choreographs entrance animations with a single IntersectionObserver.
+ * Scroll-reveal driver. Modern browsers don't need this hook at all — the
+ * `animation-timeline: view()` rules in App.css drive the entrance from the
+ * compositor without any JS. This hook is only the legacy fallback path:
+ * it opts in to the from-invisible CSS state (by adding
+ * `has-reveal-fallback` to <html>) and then walks the document with one
+ * IntersectionObserver, flipping `is-visible` as elements scroll in.
  *
- * Mark any element with `data-reveal` (single fade-up) or `data-reveal-stagger`
- * (its direct children cascade in). When the element scrolls into view we add
- * `is-visible`; the actual motion lives in CSS so it can be fully disabled via
- * `prefers-reduced-motion`. Above-the-fold elements fire on the first frame,
- * which doubles as the page's load animation.
+ * Importantly, we *don't* add the fallback class on modern browsers — that
+ * keeps SSR-rendered content visible from the very first paint instead of
+ * briefly hiding it while JS attaches.
  */
 export function useScrollReveal() {
   useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const hasTimeline =
+      typeof CSS !== 'undefined' && CSS.supports?.('animation-timeline: view()')
+
+    // Modern path: CSS owns the animation; nothing to do here.
+    if (hasTimeline && !reduceMotion) return
+
+    document.documentElement.classList.add('has-reveal-fallback')
+
     const els = Array.from(
       document.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-stagger]'),
     )
     if (els.length === 0) return
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion || !('IntersectionObserver' in window)) {
       els.forEach((el) => el.classList.add('is-visible'))
       return
