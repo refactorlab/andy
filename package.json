@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "bun test",
-    "banners": "bun scripts/banners.ts"
+    "banners": "bun scripts/banners.ts",
+    "budget": "bun scripts/bundle-budget.ts"
   },
   "dependencies": {
     "preact": "^10.29.2",

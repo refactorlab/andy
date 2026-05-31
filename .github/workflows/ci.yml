@@ -38,31 +38,8 @@ jobs:
         run: bun run build
 
       - name: Bundle-size budget
-        # Guards the code-split win: fail if the initial JS / CSS gzipped sizes
-        # blow past their budgets. Tune the limits as the page legitimately grows.
-        #
-        # Note: the CSS bundle is inlined into index.html by the inline-main-css
-        # Vite plugin (which then deletes the standalone .css so no never-fetched
-        # asset ships), so the CSS budget measures the gzipped inlined <style>
-        # payload rather than a dist/assets/index-*.css file.
-        run: |
-          set -euo pipefail
-          gz() { gzip -c "$1" | wc -c | tr -d ' '; }
-          JS=$(ls dist/assets/index-*.js | head -n1)
-          JS_GZ=$(gz "$JS")
-          CSS_GZ=$(bun -e '
-            const html = await Bun.file("dist/index.html").text();
-            const css = [...html.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join("");
-            const { gzipSync } = await import("node:zlib");
-            process.stdout.write(String(gzipSync(Buffer.from(css)).length));
-          ')
-          JS_BUDGET=82000   # ~80 KB gz — initial JS (decorative components are lazy)
-          CSS_BUDGET=12000  # ~12 KB gz — generous margin over the current ~11 KB
-          echo "Initial JS  gzip: ${JS_GZ}  / budget ${JS_BUDGET}"
-          echo "Initial CSS gzip: ${CSS_GZ} / budget ${CSS_BUDGET}"
-          if [ "$JS_GZ" -gt "$JS_BUDGET" ]; then
-            echo "::error file=$JS::Initial JS gzip ${JS_GZ} > budget ${JS_BUDGET}"; exit 1
-          fi
-          if [ "$CSS_GZ" -gt "$CSS_BUDGET" ]; then
-            echo "::error file=dist/index.html::Initial CSS gzip ${CSS_GZ} > budget ${CSS_BUDGET}"; exit 1
-          fi
+        # Fails if the gzipped initial JS / total CSS payload exceeds budget.
+        # Logic + budgets live in scripts/bundle-budget.ts (measures CSS wherever
+        # it ships, guards against a 0-byte false pass, and computes true initial
+        # JS) so the gate is testable and can't silently undercount.
+        run: bun scripts/bundle-budget.ts
