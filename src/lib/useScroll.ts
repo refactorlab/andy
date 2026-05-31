@@ -1,44 +1,51 @@
 import { useEffect, useState } from 'react'
 
-export interface ScrollState {
-  /** True once the page has scrolled past a small threshold. */
+interface ScrollState {
+  /** True after the document has scrolled past the lift threshold (~24 px). */
   scrolled: boolean
-  /** Reading progress through the document, 0 → 1. */
+  /** 0 → 1 reading-progress for the whole document. */
   progress: number
 }
 
 /**
- * rAF-throttled scroll position, used to drive the nav's elevation and the
- * reading-progress bar. One passive listener, coalesced into a single frame.
+ * Minimal scroll tracker. One passive scroll listener; updates state at most
+ * once per animation frame and skips repeated values to avoid re-rendering
+ * the nav 60 times per second. Reads `document.documentElement` so it works
+ * with `<html>` as the scroll container (matches `animation-timeline: scroll(root)`).
  */
 export function useScroll(): ScrollState {
   const [state, setState] = useState<ScrollState>({ scrolled: false, progress: 0 })
 
   useEffect(() => {
-    let frame = 0
+    let raf = 0
+    let lastScrolled = false
+    let lastProgress = -1
 
-    const measure = () => {
-      const doc = document.documentElement
-      const max = doc.scrollHeight - doc.clientHeight
-      const y = window.scrollY || doc.scrollTop
-      setState({
-        scrolled: y > 8,
-        progress: max > 0 ? Math.min(1, y / max) : 0,
-      })
+    const read = () => {
+      raf = 0
+      const root = document.documentElement
+      const max = root.scrollHeight - root.clientHeight
+      const y = root.scrollTop
+      const progress = max > 0 ? Math.max(0, Math.min(1, y / max)) : 0
+      const scrolled = y > 24
+      // Coalesce to 3 decimal places so 0.7491 → 0.749 → no re-render until it actually shifts.
+      const next = Math.round(progress * 1000) / 1000
+      if (scrolled === lastScrolled && next === lastProgress) return
+      lastScrolled = scrolled
+      lastProgress = next
+      setState({ scrolled, progress: next })
     }
 
     const onScroll = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(measure)
+      if (raf) return
+      raf = requestAnimationFrame(read)
     }
 
-    measure()
+    read()
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
     return () => {
-      cancelAnimationFrame(frame)
       window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [])
 

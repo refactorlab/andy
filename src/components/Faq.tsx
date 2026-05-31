@@ -1,5 +1,4 @@
 import type { CSSProperties } from 'react'
-import { ScrambleText } from './ScrambleText'
 
 const FAQS = [
   {
@@ -34,7 +33,7 @@ export function Faq() {
     <section className="section section-tight" id="faq">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <ScrambleText className="kicker" text="// common questions, straight answers" />
+          <span className="kicker">// common questions, straight answers</span>
           <h2>Things people ask before installing.</h2>
         </header>
         <ul className="faq-list">

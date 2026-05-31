@@ -1,6 +1,5 @@
-import { Typewriter } from './Typewriter'
-import { ScrambleText } from './ScrambleText'
 import { CopyButton } from './CopyButton'
+import { tokenizeYaml } from '../lib/yaml'
 
 const MARKETPLACE = 'https://github.com/marketplace/actions/andy-pr-handoff-by-drift'
 
@@ -41,12 +40,18 @@ const steps = [
   },
 ]
 
+/**
+ * YAML is rendered statically with syntax highlighting — no Typewriter, no
+ * IntersectionObserver, no per-frame React renders. The file is ~24 lines, the
+ * tokenize cost is < 0.3 ms once, and the visual is identical at rest.
+ */
 export function Install() {
+  const tokens = tokenizeYaml(yaml)
   return (
     <section className="section section-alt" id="install">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <ScrambleText className="kicker" text="// install in 30 seconds" />
+          <span className="kicker">// install in 30 seconds</span>
           <h2>One YAML file. Then push.</h2>
           <p className="section-lede">
             Andy runs as a GitHub Action on your own runner. Nothing leaves the
@@ -63,9 +68,13 @@ export function Install() {
               <span className="code-path">.github/workflows/drift.yml</span>
               <CopyButton text={yaml} />
             </div>
-            <pre className="code-block"><Typewriter text={yaml} /></pre>
+            <pre className="code-block"><code>
+              {tokens.map((t, i) =>
+                t.t === 'plain' ? t.v : <span key={i} className={`tok-${t.t}`}>{t.v}</span>,
+              )}
+            </code></pre>
             <div className="code-foot">
-              <a className="btn btn-primary btn-sm" data-magnetic href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-primary btn-sm" href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
                 Install from Marketplace →
               </a>
               <a className="link-inline" href="https://github.com/refactorlab/andy" target="_blank" rel="noopener noreferrer">

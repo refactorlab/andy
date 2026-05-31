@@ -16,7 +16,7 @@ export function Footer() {
               no API key, nothing leaves your runner.
             </p>
             <div className="footer-cta-actions">
-              <a className="btn btn-primary" data-magnetic href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-primary" href={MARKETPLACE} target="_blank" rel="noopener noreferrer">
                 Install from Marketplace
                 <span aria-hidden="true">→</span>
               </a>
@@ -45,7 +45,7 @@ export function Footer() {
         </nav>
 
         <div className="footer-meta">
-          © {new Date().getFullYear()} refactorlab · MIT
+          © {__BUILD_YEAR__} refactorlab · MIT
         </div>
       </div>
     </footer>

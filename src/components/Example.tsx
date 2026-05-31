@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react'
 import { CountUp } from './CountUp'
-import { ScrambleText } from './ScrambleText'
 import { ArchDiagram } from './ArchDiagram'
 
 export function Example() {
@@ -8,7 +7,7 @@ export function Example() {
     <section className="section" id="example">
       <div className="wrap">
         <header className="section-head" data-reveal>
-          <ScrambleText className="kicker" text="// inside an andy review" />
+          <span className="kicker">// inside an andy review</span>
           <h2>A peek at the output.</h2>
           <p className="section-lede">
             Two artifacts pulled from a real review on a 100-file PR. The full
@@ -68,7 +67,7 @@ export function Example() {
         <ArchDiagram />
 
         <div className="example-cta" data-reveal>
-          <a className="btn btn-primary" data-magnetic href="./pr36-github-ui_2.html" target="_blank" rel="noopener noreferrer">
+          <a className="btn btn-primary" href="./pr36-github-ui_2.html" target="_blank" rel="noopener noreferrer">
             Open the full example review →
           </a>
         </div>
