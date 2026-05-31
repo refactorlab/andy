@@ -1,11 +1,10 @@
 <!-- drift:sticky-comment -->
 <p align="center"><a href="https://refactorlab.github.io/andy/"><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/banner.svg" alt="Andy — PR Handoff by Drift" width="100%" /></a></p>
 
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/drift-review.png" alt="Drift review" width="100%" /></p>
+<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/drift-review.png" alt="Drift review" height="40" /></p>
+<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/summary-audio.png" alt="Audio summary — AI-narrated recap of this review" height="40" /></p>
 
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/summary-audio.png" alt="Audio summary — AI-narrated recap of this review" width="100%" /></p>
-
-## ▲ Drift review — `Drift smoke run`
+## Drift review — `Drift smoke run`
 
 > 🟢 **Looks good** — add tests and drop 3 dead exports before you ship.
 
@@ -28,12 +27,8 @@
 
 > **Merge readiness** &nbsp; `░░░░░░░░░░` &nbsp; **0 / 3** — GitHub tallies the boxes above as you check them off.
 
----
-
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/architecture.png" alt="Architecture" width="100%" /></p>
-
 <details>
-<summary><strong>🏗 Architecture</strong> — Before vs after diagrams · 1 unreachable</summary>
+<summary><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/architecture.png" alt="Architecture" height="40" /> — Before vs after diagrams · 1 unreachable</summary>
 
 > **1 changed file is unreachable** from any entry point — likely dead code, config, or tests: [`db.py`](https://github.com/PLACEHOLDER_OWNER/PLACEHOLDER_REPO/blob/deadbeefcafe1234567890abcdef0123456789ab/app/db.py). (These match the dead-code suggestions below.)
 
@@ -142,12 +137,8 @@ mindmap
 
 </details>
 
----
-
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/business-value.png" alt="Business value" width="100%" /></p>
-
 <details open>
-<summary><strong>📊 Business value</strong> — Overall drift +21.8% ▲ · 👥 Customer / user value leads</summary>
+<summary><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/business-value.png" alt="Business value" height="40" /> — Overall drift +21.8% ▲ · 👥 Customer / user value leads</summary>
 
 <table>
 <caption>PR value drift — composite &amp; per-axis (Δ% vs. base)</caption>
@@ -274,12 +265,8 @@ xychart-beta
 
 </details>
 
----
-
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/code-suggestions.png" alt="Code suggestions" width="100%" /></p>
-
 <details open>
-<summary><strong>⚠️ Code suggestions (3)</strong> — 3 suggestions</summary>
+<summary><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/code-suggestions.png" alt="Code suggestions" height="40" /> — 3 suggestions</summary>
 
 <sub>**Priority reflects impact, not certainty** — a 100%-confident dead-code removal is still low-priority cleanup; a product-correctness finding matters more.</sub>
 
@@ -496,11 +483,8 @@ These entry points lack retry / timeout / circuit / fallback markers:
 
 </details>
 
----
-
-<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/andy.png" alt="Andy — your PR handoff assistant" width="100%" /></p>
-
-<sub>🟧 <strong>Andy</strong> — your PR handoff assistant · one comment, re-rendered every push.</sub>
+<p><img src="https://raw.githubusercontent.com/refactorlab/andy/main/docs/screenshots/andy.png" alt="Andy — your PR handoff assistant" height="40" /></p>
+<sub><strong>Andy</strong> — your PR handoff assistant · one comment, re-rendered every push.</sub>
 
 <sub>Posted by <a href="https://drift.dev">Drift</a> · static-analysis report from <code>drift-static-profiler</code> v0.6.8</sub>
 

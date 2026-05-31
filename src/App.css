@@ -132,6 +132,7 @@ main { flex: 1; }
   font-size: 14px;
   font-weight: 500;
   position: relative;
+  white-space: nowrap;
   transition: color 0.18s ease;
 }
 .nav-links a::after {
@@ -771,6 +772,67 @@ main > .hero { content-visibility: visible; }
 }
 .hcard-foot a { color: var(--accent); font-weight: 500; }
 
+/* Audio-summary affordance inside the comment preview — a compact, clickable
+ * echo of the dedicated player below. Static (decorative) waveform; the real
+ * player lives in #audio. */
+.hcard-audio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text-dim);
+  transition: border-color 0.2s var(--ease-out), background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+.hcard-audio:hover {
+  text-decoration: none;
+  opacity: 1;
+  color: var(--text);
+  border-color: color-mix(in oklch, var(--accent) 40%, var(--border));
+  background: color-mix(in oklch, var(--accent) 6%, var(--bg-soft));
+}
+.hcard-audio-ic {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+.hcard-audio-ic svg { transform: translateX(1px); } /* optically center the triangle */
+.hcard-audio-label { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.hcard-audio-wave {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 20px;
+  overflow: hidden;
+}
+.hcard-audio-wave > span {
+  flex: 1;
+  min-width: 2px;
+  height: calc(var(--h) * 100%);
+  border-radius: 2px;
+  background: color-mix(in oklch, var(--accent) 45%, var(--border-strong));
+}
+.hcard-audio:hover .hcard-audio-wave > span { background: color-mix(in oklch, var(--accent) 62%, var(--border-strong)); }
+.hcard-audio-dur {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ─── Problem ─────────────────────────────────────────────────────────── */
 
 .problem-grid {
@@ -976,6 +1038,357 @@ main > .hero { content-visibility: visible; }
 .ap-edge { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
 .ap-arrow { fill: none; stroke: var(--accent); stroke-width: 2; }
 .ap-arrowfill { fill: var(--accent); }
+
+/* ─── Audio summary ───────────────────────────────────────────────────── */
+
+/* A faithful preview of Andy's narrated summary, framed as an embed inside the
+ * bot's comment. The only continuous animations here (the VU waveform + the
+ * "narrating" dot) are transform/opacity-only, gated to the actively-playing
+ * state, and disabled under reduced-motion / reduced-data — so the page's
+ * idle-paint budget is untouched. */
+.audio-embed {
+  max-width: 660px;
+  margin: 0 auto;
+  border: 1px solid color-mix(in oklch, var(--accent) 18%, var(--border));
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 120% at 0% 0%, color-mix(in oklch, var(--accent) 7%, transparent), transparent 60%),
+    var(--bg-card);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.audio-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.audio-avatar {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--gradient);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 14px color-mix(in oklch, var(--accent) 28%, transparent);
+}
+.audio-head-meta { flex: 1; min-width: 0; }
+.audio-head-name { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.audio-head-name strong { color: var(--text); }
+.audio-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  padding: 1px 7px;
+  border-radius: 100px;
+}
+.audio-head-sub {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 18px;
+}
+.audio-play {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 50%;
+  border: 0;
+  background: var(--gradient);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.4),
+    0 8px 22px color-mix(in oklch, var(--accent) 34%, transparent);
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.18s var(--ease-out);
+}
+.audio-play:hover {
+  transform: scale(1.06);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.5),
+    0 12px 30px color-mix(in oklch, var(--accent) 46%, transparent);
+}
+.audio-play:active { transform: scale(0.96); }
+.audio-player:not(.is-playing) .audio-play svg { transform: translateX(1px); } /* center the triangle */
+
+.audio-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.audio-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 48px;
+  cursor: pointer;
+  border-radius: 8px;
+  touch-action: manipulation;
+}
+.audio-wave:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+/* Tune the (global) accent focus ring to each control's shape — the round play
+ * button reads better with a slightly wider gap, the square mute button tighter. */
+.audio-play:focus-visible { outline-offset: 4px; }
+.audio-mute:focus-visible { outline-offset: 2px; }
+.audio-bar {
+  flex: 1;
+  min-width: 2px;
+  height: calc(var(--h) * 100%);
+  border-radius: 2px;
+  background: var(--border-strong);
+  transform-origin: center;
+  transition: background 0.25s var(--ease-out);
+}
+.audio-bar.is-played { background: var(--accent); }
+.audio-bar.is-head {
+  background: var(--accent-2);
+  box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 60%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .audio-player.is-playing .audio-bar {
+    animation: audio-vu 1100ms var(--ease-in-out) infinite;
+    animation-delay: calc(var(--i) * -41ms);
+  }
+}
+/* The waveform is the page's only would-be continuous repaint beyond the
+ * marquee — silence it under data-saver, mirroring the marquee. */
+@media (prefers-reduced-data: reduce) {
+  .audio-player.is-playing .audio-bar { animation: none; }
+}
+@keyframes audio-vu {
+  0%, 100% { transform: scaleY(0.6); }
+  50% { transform: scaleY(1); }
+}
+
+.audio-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.audio-time {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.audio-time-total { color: var(--text-faint); font-weight: 500; }
+.audio-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.audio-status.is-live { color: var(--accent); }
+.audio-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 22%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .audio-status.is-live .audio-status-dot { animation: audio-pulse 1.4s var(--ease-in-out) infinite; }
+}
+/* Same data-saver courtesy as the waveform + marquee: no continuous repaint. */
+@media (prefers-reduced-data: reduce) {
+  .audio-status.is-live .audio-status-dot { animation: none; }
+}
+@keyframes audio-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.audio-mute {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  align-self: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s var(--ease-out), border-color 0.18s var(--ease-out),
+    background 0.18s var(--ease-out);
+}
+.audio-mute:hover { color: var(--text); border-color: var(--border-strong); background: var(--bg-soft); }
+.audio-mute.is-muted {
+  color: var(--danger);
+  border-color: color-mix(in oklch, var(--danger) 35%, var(--border));
+}
+
+.audio-transcript,
+.audio-settings {
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.audio-transcript summary,
+.audio-settings summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  user-select: none;
+  transition: color 0.18s var(--ease-out);
+}
+.audio-transcript summary::-webkit-details-marker,
+.audio-settings summary::-webkit-details-marker { display: none; }
+.audio-transcript summary:hover,
+.audio-settings summary:hover { color: var(--text); }
+.audio-transcript[open] summary,
+.audio-settings[open] summary { color: var(--accent); }
+.audio-transcript-chevron {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-faint);
+  transition: transform 0.3s var(--ease-spring), color 0.2s var(--ease-out);
+}
+.audio-transcript summary:hover .audio-transcript-chevron,
+.audio-settings summary:hover .audio-transcript-chevron { color: var(--accent); }
+.audio-transcript[open] .audio-transcript-chevron,
+.audio-settings[open] .audio-transcript-chevron { transform: rotate(135deg); color: var(--accent); }
+.audio-transcript p {
+  margin: 0;
+  padding: 0 18px 18px;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Voice & playback controls (Web Speech API). */
+.audio-settings-body { padding: 2px 18px 18px; display: grid; gap: 14px; }
+.audio-field { display: grid; gap: 7px; }
+.audio-field-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.audio-field-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.audio-field-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.audio-select {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease-out);
+}
+.audio-select:hover { border-color: var(--border-strong); }
+.audio-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Native range, themed to the brand accent (track + thumb) in one line. */
+.audio-range {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+  height: 22px;
+}
+.audio-range:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.audio-settings-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.audio-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in oklch, var(--accent) 35%, var(--border));
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s var(--ease-out), border-color 0.18s var(--ease-out);
+}
+.audio-preview:hover { background: color-mix(in oklch, var(--accent) 16%, var(--bg-card)); border-color: var(--accent); }
+.audio-preview:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.audio-settings-hint {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+/* Smooth height reveal — same progressive-enhancement path as the FAQ
+ * (:root already opts into interpolate-size in the FAQ block). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .audio-transcript::details-content,
+    .audio-settings::details-content {
+      height: 0;
+      overflow: clip;
+      opacity: 0;
+      transition: height 0.3s var(--ease-out), opacity 0.25s var(--ease-out),
+        content-visibility 0.3s allow-discrete;
+    }
+    .audio-transcript[open]::details-content,
+    .audio-settings[open]::details-content { height: auto; opacity: 1; }
+  }
+}
+
+@media (max-width: 520px) {
+  .audio-player { gap: 12px; padding: 18px 14px; }
+  .audio-play { width: 48px; height: 48px; }
+  .audio-wave { height: 40px; }
+}
 
 /* ─── Marquee ─────────────────────────────────────────────────────────── */
 

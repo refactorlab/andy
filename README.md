@@ -83,7 +83,7 @@ Three questions every PR comment fails to answer:
 </tr>
 </table>
 
-Andy reads every pull request and posts **one comment** with the answers.
+Andy reads every pull request and posts **one comment** with the answers — and a **60-second audio summary** you can play.
 
 ---
 
@@ -143,15 +143,18 @@ flowchart LR
     Andy --> A4[⚠ Risk quadrant]
     Andy --> A5[🗂 Hot-touch mindmap]
     Andy --> A6[🧭 Business context]
+    Andy --> A7[🔊 Audio summary]
     classDef src fill:#1f6feb,stroke:#1d4ed8,color:#fff
     classDef hub fill:#ff6b3d,stroke:#ff9558,color:#fff
     classDef out fill:#fafaf7,stroke:#d4d2cb,color:#1a1a1a
+    classDef aud fill:#fff1ea,stroke:#ff9558,color:#1a1a1a
     class PR src
     class Andy hub
     class A1,A2,A3,A4,A5,A6 out
+    class A7 aud
 ```
 
-One sticky comment per pull request, re-rendered on every push. Inside it: the visuals that turn a large diff into a guided handoff, plus the code suggestions and risks that actually need a reviewer's eye.
+One sticky comment per pull request, re-rendered on every push. Inside it: the visuals that turn a large diff into a guided handoff, plus the code suggestions and risks that actually need a reviewer's eye. And now a **60-second audio summary** rides along in the same comment — the whole review, narrated — so the next reviewer can *listen* to what changed before they read a line.
 
 <p align="center">
   <picture>
@@ -168,6 +171,8 @@ One sticky comment per pull request, re-rendered on every push. Inside it: the v
 | 4 | ⚠️ **Risk quadrant** | Severity × likelihood map of every risk Andy spotted. Block on what's red before merge; monitor the rest. |
 | 5 | 🗂 **Hot-touch mindmap** | The files reviewers should open first, grouped by subsystem — the difference between a 100-file PR and a 6-file mental model. |
 | 6 | 🧭 **Business context** | A product-level diagram with the slice your PR touches highlighted — so reviewers see *why* the change exists, not just *what*. |
+
+> 🔊 **Plus an audio summary.** Not a seventh card — a different *modality*. Andy attaches a ~60-second narrated overview of the PR (what changed, why it matters, where to start), generated alongside the comment and embedded as a playable clip — for the commute, the code walk, or the reviewer who'd rather listen than scroll.
 
 ---
 

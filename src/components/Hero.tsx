@@ -5,6 +5,10 @@ import { HeroCanvas } from './HeroCanvas'
 import { ScoreGauge } from './ScoreGauge'
 import { KineticHeading } from './KineticHeading'
 import { SafeBoundary } from './SafeBoundary'
+import { waveform } from '../lib/audio'
+
+// A short, static echo of the audio-summary waveform for the comment preview.
+const MINI_WAVE = waveform(18)
 
 const HEADLINE = [
   { text: 'The' },
@@ -36,8 +40,8 @@ export function Hero() {
             <p className="hero-sub">
               Andy reads every pull request and posts one comment: an
               architecture map, a money / time impact card, ranked code
-              suggestions, and a risk quadrant. Drops in via one YAML file. No
-              service to authorize.
+              suggestions, a risk quadrant — and a 60-second audio summary you
+              can play. Drops in via one YAML file. No service to authorize.
             </p>
 
             <div className="hero-cta">
@@ -110,6 +114,26 @@ export function Hero() {
                     </div>
                   ))}
                 </div>
+
+                <a
+                  className="hcard-audio"
+                  href="#audio"
+                  aria-label="Audio summary — 52 seconds. Jump to the player."
+                  onClick={() => window.setTimeout(() => window.dispatchEvent(new Event('play-audio-summary')), 420)}
+                >
+                  <span className="hcard-audio-ic" aria-hidden="true">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.5-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
+                    </svg>
+                  </span>
+                  <span className="hcard-audio-label">Audio summary</span>
+                  <span className="hcard-audio-wave" aria-hidden="true">
+                    {MINI_WAVE.map((h, i) => (
+                      <span key={i} style={{ '--h': h } as CSSProperties} />
+                    ))}
+                  </span>
+                  <span className="hcard-audio-dur">0:52</span>
+                </a>
 
                 <div className="hcard-foot">
                   <span>9 findings · 3 above suggestion threshold</span>

@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build && bun scripts/prerender.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
-    "test": "bun test"
+    "test": "bun test",
+    "banners": "bun scripts/banners.ts"
   },
   "dependencies": {
     "preact": "^10.29.2",
