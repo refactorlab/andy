@@ -25,12 +25,24 @@ const openUrl = (url: string) => window.open(url, '_blank', 'noopener,noreferrer
 const COMMANDS: Command[] = [
   { id: 'go-problem', label: 'Problem', hint: 'Why PR reviews fall short', group: 'Jump to', run: () => scrollTo('problem') },
   { id: 'go-what', label: 'What you get', hint: 'The six artifacts', group: 'Jump to', run: () => scrollTo('what') },
+  { id: 'go-audio', label: 'Audio summary', hint: 'The PR, read aloud', group: 'Jump to', run: () => scrollTo('audio') },
   { id: 'go-install', label: 'Install', hint: 'One YAML file', group: 'Jump to', run: () => scrollTo('install') },
   { id: 'go-example', label: 'Example', hint: 'A real review', group: 'Jump to', run: () => scrollTo('example') },
   { id: 'go-faq', label: 'FAQ', hint: 'Common questions', group: 'Jump to', run: () => scrollTo('faq') },
   { id: 'go-contact', label: 'Contact', hint: 'Email or book a meeting', group: 'Jump to', run: () => scrollTo('contact') },
   { id: 'a-install', label: 'Install from Marketplace', hint: 'Open GitHub Marketplace', group: 'Actions', run: () => openUrl(MARKETPLACE) },
   { id: 'a-example', label: 'See an example review', hint: 'Open the full PR comment', group: 'Actions', run: () => openUrl(EXAMPLE) },
+  {
+    id: 'a-audio',
+    label: 'Play the audio summary',
+    hint: 'Hear the PR narrated',
+    group: 'Actions',
+    run: () => {
+      scrollTo('audio')
+      // Let the scroll settle (and the section mount) before starting playback.
+      window.setTimeout(() => window.dispatchEvent(new Event('play-audio-summary')), 360)
+    },
+  },
   { id: 'a-calendly', label: 'Book a 30-min meeting', hint: 'Open Calendly', group: 'Actions', run: () => openUrl(CALENDLY) },
   { id: 'a-github', label: 'View source on GitHub', hint: 'refactorlab/andy', group: 'Actions', run: () => openUrl(REPO) },
   { id: 'a-theme', label: 'Toggle theme', hint: 'Switch light / dark', group: 'Actions', run: () => toggleTheme() },

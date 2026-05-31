@@ -9,6 +9,7 @@ const ITEMS: DockItem[] = [
   { id: 'top', label: 'Top' },
   { id: 'problem', label: 'Problem' },
   { id: 'what', label: 'What you get' },
+  { id: 'audio', label: 'Audio' },
   { id: 'install', label: 'Install' },
   { id: 'example', label: 'Example' },
   { id: 'faq', label: 'FAQ' },

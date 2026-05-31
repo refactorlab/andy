@@ -3,6 +3,7 @@ import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { Problem } from './components/Problem'
 import { Artifacts } from './components/Artifacts'
+import { AudioSummary } from './components/AudioSummary'
 import { Install } from './components/Install'
 import { Example } from './components/Example'
 import { Faq } from './components/Faq'
@@ -185,6 +186,7 @@ export default function App() {
         </section>
         <Problem />
         <Artifacts />
+        <AudioSummary />
         <Deferred label="marquee">
           <Marquee
             items={[
@@ -194,6 +196,7 @@ export default function App() {
               'ranked suggestions',
               'hot-touch mindmap',
               'business context',
+              'audio summary',
             ]}
           />
         </Deferred>
